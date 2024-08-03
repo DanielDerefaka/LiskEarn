@@ -45,10 +45,10 @@ export function middleware(req: NextRequest) {
   if (protectedRoutes.some(route => new RegExp(`^${route}$`).test(path))) {
     const walletAddress = req.cookies.get('walletAddress')?.value;
 
-    if (!walletAddress) {
-      // Redirect to login page if wallet is not connected
-      return NextResponse.redirect(new URL('/auth/Login', req.url));
-    }
+    // if (!walletAddress) {
+    //   // Redirect to login page if wallet is not connected
+    //   return NextResponse.redirect(new URL('/auth/Login', req.url));
+    // }
   }
 
   // Allow access to public routes and for authenticated users
