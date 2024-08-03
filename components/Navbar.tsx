@@ -156,7 +156,7 @@ const Navbar: React.FC = () => {
     }
 
     return (
-      <Link href="/create-account">
+      <Link href="/CreateAccount">
         <button>Create Account</button>
       </Link>
     );

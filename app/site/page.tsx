@@ -1,7 +1,14 @@
+
 import Bounties from "@/components/Bounties";
+
+import { getEthEarnContract } from "@/lib/ContractInteraction";
 import Image from "next/image";
+import {useState ,useEffect } from "react";
+import { Bounty } from '@/types';
 
 export default function Home() {
+
+  
   return (
     <main className="">
       <section className="h-full w-full pt-25 mt-25 md:mt-1 relative flex  md:p-20 p-5  md:pt-20 md:flex-row flex-col">
