@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,7 +26,8 @@ type BountyProp ={
   pay: number,
   endDate: number,
   timestamp: number,
-  state?: boolean
+  state?: boolean,
+  id: string
 }
 
 const BountySec = () => {
@@ -118,7 +119,7 @@ const BountySec = () => {
         <TabsContent value="open">
           {
             Bounties.map((b: BountyProp, i) => {
-              return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i}  />
+              return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id}  />
             })
           }
         </TabsContent>

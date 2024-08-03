@@ -1,5 +1,6 @@
+import { activeBountyContext } from '@/app/site/page'
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
 
 type BountyProp ={
   name: string,
@@ -9,11 +10,25 @@ type BountyProp ={
   endDate: number,
   entryDate: number,
   key: number,
-  state?: boolean
+  state?: boolean,
+  id: string
 }
-const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, state}: BountyProp) => {
+const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, state, id}: BountyProp) => {
+  
+  const {setter} = useContext(activeBountyContext);
+
   return (
-    <div className={`p-5 hover:bg-gray-200  rounded-md cursor-pointer h-25 ${!state && "bg-red-600"}`} key={key}>
+    <div className={`p-5 hover:bg-gray-200  rounded-md cursor-pointer h-25 ${!state && "bg-red-600"}`} key={key} onClick={() => {
+      setter({
+        id,
+        name,
+        owner,
+        timeStamp: entryDate,
+        endDate: endDate,
+        description,
+        pay,
+      })
+    }}>
     <div className="flex justify-between">
       <div className="flex flex-row gap-4 ">
         <div className="w-10 h-10 bg-black">
