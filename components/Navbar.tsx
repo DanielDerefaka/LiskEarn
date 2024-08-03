@@ -6,10 +6,24 @@ import ConnectButton from './shared/ConnectWallet';
 import { getEthEarnContract } from '@/lib/ContractInteraction';
 import { UserData } from '@/types';
 import { useRouter } from 'next/navigation';
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+ 
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import Image from 'next/image';
 
 interface Profile {
   name: string;
   category: 'creator' | 'bounty_hunter';
+  profileImg: string
 }
 
 const Navbar: React.FC = () => {
@@ -18,6 +32,7 @@ const Navbar: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -67,6 +82,27 @@ const Navbar: React.FC = () => {
     }
   }, [walletAddress, isConnected]);
 
+  // Add disconnect wallet function
+  const disconnectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // Reset states
+        setWalletAddress(null);
+        setIsConnected(false);
+        setProfile(null);
+
+        // If using Web3Modal or similar library, you might need to call their disconnect method
+        // await web3Modal.clearCachedProvider();
+
+        // Reload the page to ensure all states are cleared
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to disconnect wallet:", error);
+        setError("Failed to disconnect wallet. Please try again.");
+      }
+    }
+  };
+
   const renderProfileSection = () => {
     if (isLoading) {
       return <div>Loading...</div>;
@@ -84,7 +120,38 @@ const Navbar: React.FC = () => {
           </Link>
         );
       } else if (profile.category === 'bounty_hunter') {
-        return <div>{profile.name}</div>;
+        return <div>
+           <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+      <div className='flex gap-2 rounded-md cursor-pointer hover:bg-slate-50 p-2'>
+            <div> 
+                  <Image src={profile.profileImg} className='rounded-full object-cover w-8 h-8' alt='image' width={30} height={0} />
+            </div>
+            <div className='mt-0'>
+            <p>{profile.name.split(' ')[0]}</p>
+
+            </div>
+
+          </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+      <DropdownMenuItem>
+            <Link href="/UserProfile">  
+            Profille
+            </Link>
+          </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+            <Link href="/UserProfile">  
+            Profille
+            </Link>
+          </DropdownMenuItem>
+        <DropdownMenuItem onClick={disconnectWallet}>
+          Disconnect
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+        </div>;
       }
     }
 
@@ -96,7 +163,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="flex fixed w-full top-0 z-10 items-center justify-between flex-wrap bg-white p-6">
+    <nav className="flex fixed w-full top-0 z-10 items-center justify-between flex-wrap bg-black-2 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
         <Link href="/">
           <span className="font-semibold text-xl text-black">Lisk Earn</span>
