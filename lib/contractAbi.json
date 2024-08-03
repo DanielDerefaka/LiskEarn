@@ -108,186 +108,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getAllActiveBounties",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "submissions",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256",
-						"name": "pay",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "state",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "endDate",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct EthEarn.Bounty[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllBounties",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "submissions",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256",
-						"name": "pay",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "state",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "endDate",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct EthEarn.Bounty[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllCompletedBounties",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "submissions",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256",
-						"name": "pay",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "state",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "endDate",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct EthEarn.Bounty[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -508,6 +328,82 @@
 		],
 		"name": "UnauthorizedAccess",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "profileImage",
+				"type": "string"
+			}
+		],
+		"name": "updateUserProfile",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "email",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "category",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "profileImg",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "bounties",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "submissions",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct EthEarn.UserData",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
