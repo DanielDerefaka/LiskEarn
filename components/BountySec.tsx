@@ -18,6 +18,7 @@ import contractInteractions from "@/lib/Contract";
 import { Bounty } from "@/types";
 import { ethers } from "ethers";
 import { stat } from "fs";
+import { getEthEarnContract } from "@/lib/ContractInteraction";
 
 type BountyProp ={
   name: string,
@@ -70,7 +71,7 @@ const BountySec = () => {
         bounties =await contractInteractions.getAllActiveBounties()
         break;
 
-      case "completed": 
+      case "ended": 
         bounties =await contractInteractions.getAllCompletedBounties()
         break;
     
@@ -79,7 +80,7 @@ const BountySec = () => {
         break;
     }
 
-    const processedBounties = bounties.map(bounty => {
+    const processedBounties = bounties.map((bounty: any) => {
       return {
         id: bounty.id.toString(),
         name: bounty[1], // or bounty.name
@@ -96,10 +97,11 @@ const BountySec = () => {
   }
 
   useEffect(() => {
-    if(isConnected && walletAddress) {    
-      fetchBounties();
+    if(isConnected && walletAddress) {  
+        fetchBounties();
     }
   }, [State, isConnected, walletAddress]);
+
   return (
     <div className="mt-5">
       <Tabs defaultValue="all">
@@ -111,9 +113,9 @@ const BountySec = () => {
           <TabsTrigger value="open" onClick={() => {
             setState("open");
           }}>Open</TabsTrigger>
-          <TabsTrigger value="completed" onClick={() => {
-            setState("completed");
-          }}>Completed</TabsTrigger>
+          <TabsTrigger value="ended" onClick={() => {
+            setState("ended");
+          }}>Ended</TabsTrigger>
         </TabsList>
         <div className="border-b-[1px] border-gray-500 rounded"></div>
         <TabsContent value="open">

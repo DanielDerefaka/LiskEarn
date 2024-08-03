@@ -6,8 +6,8 @@ import { strict } from 'assert';
 
 const CONTRACT_ADDRESS = "0x8Bd684838524456C5C4396dB0ab6E903D42d3893";
 
-const getEthEarnContract = () => {
-  const signer = getSigner();
+const getEthEarnContract = async () => {
+  const signer = await getSigner();
   return new ethers.Contract(CONTRACT_ADDRESS, EthEarnABI, signer);
 };
 
@@ -15,7 +15,7 @@ export const contractInteractions = {
   // User functions
   createUser: async (name: string, email: string, category: string, profileImg: string): Promise<void> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const tx = await contract.createUser(name, email, category, profileImg);
       await tx.wait();
     } catch (error) {
@@ -26,7 +26,7 @@ export const contractInteractions = {
 
   updateUserProfile: async (name: string, category: string, profileImg: string): Promise<UserData> =>{
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const tx = contract.updateUserProfile(name, category, profileImg);
       return tx;
     } catch (error) {
@@ -37,7 +37,7 @@ export const contractInteractions = {
 
   viewMyProfile: async (): Promise<UserData> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const profile = await contract.viewMyProfile();
       return profile;
     } catch (error) {
@@ -49,7 +49,7 @@ export const contractInteractions = {
   // Bounty functions
   makeBounty: async (name: string, description: string, pay: string, endDate: number): Promise<void> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const payInWei = ethers.utils.parseEther(pay);
       const tx = await contract.makeBounty(name, description, payInWei, endDate);
       await tx.wait();
@@ -61,7 +61,7 @@ export const contractInteractions = {
 
   getAllActiveBounties: async (): Promise<Bounty[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const bounties = await contract.getAllActiveBounties();
       return bounties;
     } catch (error) {
@@ -72,7 +72,7 @@ export const contractInteractions = {
 
   getAllBounties: async (): Promise<Bounty[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const bounties = await contract.getAllBounties();
       return bounties;
     } catch (error) {
@@ -83,7 +83,7 @@ export const contractInteractions = {
 
   getAllCompletedBounties: async (): Promise<Bounty[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const bounties = await contract.getAllCompletedBounties();
       return bounties;
     } catch (error) {
@@ -94,7 +94,8 @@ export const contractInteractions = {
 
   getUserBounties: async (): Promise<Bounty[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
+      console.log(await getSigner());
       const bounties = await contract.getUserBounties();
       return bounties;
     } catch (error) {
@@ -105,7 +106,7 @@ export const contractInteractions = {
 
   endBounty: async (bountyId: number): Promise<void> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const tx = await contract.endBounty(bountyId);
       await tx.wait();
     } catch (error) {
@@ -117,7 +118,7 @@ export const contractInteractions = {
   // Submission functions
   makeSubmission: async (bountyId: number, content: string): Promise<void> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const tx = await contract.makeSubmission(bountyId, content);
       await tx.wait();
     } catch (error) {
@@ -128,7 +129,7 @@ export const contractInteractions = {
 
   getSubmissionsForBounty: async (bountyId: number): Promise<Submission[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const submissions = await contract.getSubmissionsForBounty(bountyId);
       return submissions;
     } catch (error) {
@@ -139,7 +140,7 @@ export const contractInteractions = {
 
   getUserSubmissions: async (): Promise<Submission[]> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const submissions = await contract.getUserSubmissions();
       return submissions;
     } catch (error) {
@@ -151,7 +152,7 @@ export const contractInteractions = {
   // Admin functions
   approveSubmission: async (bountyId: number, submissionId: number): Promise<void> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const tx = await contract.ApproveSubmission(bountyId, submissionId);
       await tx.wait();
     } catch (error) {
@@ -163,7 +164,7 @@ export const contractInteractions = {
   // New function to get a user's profile
   getAUserProfile: async (walletAddress: string): Promise<UserData> => {
     try {
-      const contract = getEthEarnContract();
+      const contract = await getEthEarnContract();
       const profile = await contract.getAUserProfile(walletAddress);
       return profile;
     } catch (error) {

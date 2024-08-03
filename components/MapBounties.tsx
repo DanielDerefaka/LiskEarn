@@ -1,6 +1,8 @@
 import { activeBountyContext } from '@/app/site/page'
 import Image from 'next/image'
-import React, { useContext } from 'react'
+import React, { Dispatch, SetStateAction, useContext } from 'react'
+import { Button } from './ui/button'
+import contractInteractions from '@/lib/Contract'
 
 type BountyProp ={
   name: string,
@@ -11,23 +13,33 @@ type BountyProp ={
   entryDate: number,
   key: number,
   state?: boolean,
-  id: string
+  id: string,
+  endBounty?: boolean,
+  setFetch?: Dispatch<SetStateAction<number>>,
 }
-const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, state, id}: BountyProp) => {
-  
-  const {setter} = useContext(activeBountyContext);
+const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, state, id, endBounty, setFetch}: BountyProp) => {
+  let setter2 = (val: any) => {
+
+  }
+
+  if(!endBounty) {
+    const {setter} = useContext(activeBountyContext);
+    setter2 = setter;
+  }
 
   return (
-    <div className={`p-5 hover:bg-gray-200  rounded-md cursor-pointer h-25 ${!state && "bg-red-600"}`} key={key} onClick={() => {
-      setter({
-        id,
-        name,
-        owner,
-        timeStamp: entryDate,
-        endDate: endDate,
-        description,
-        pay,
-      })
+    <div className={`p-5 hover:bg-gray-200  rounded-md cursor-pointer h-25`} key={key} onClick={() => {
+      if(!endBounty) {
+        setter2({
+          id,
+          name,
+          owner,
+          timeStamp: entryDate,
+          endDate: endDate,
+          description,
+          pay,
+        })
+      }
     }}>
     <div className="flex justify-between">
       <div className="flex flex-row gap-4 ">
@@ -45,11 +57,18 @@ const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, st
             <p>Due {endDate}</p>
             <p>4 </p>
           </div>
+          <div className={`${state ? "text-green-600" : "text-red-600"}`}>{state ? "Active" : "Ended"}</div>
         </div>
       </div>
 
-      <div>
+      <div className='text-right h-full flex flex-col justify-between items-end'>
         <p className="text-bold font-mono">{pay}</p>
+        {endBounty && <Button className={'mt-5 hover:bg-red-600'} onClick={async () => {
+          await contractInteractions.endBounty(parseInt(id));
+          setFetch!((prev) => prev+1);
+          alert("Bounty ended successfully, Refresh to view changes");
+        }
+        }>Cancel Bounty</Button>}
       </div>
     </div>
   </div>

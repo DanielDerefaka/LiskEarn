@@ -1,8 +1,10 @@
 "use client"
 import Bounties from "@/components/Bounties";
 import { Button } from "@/components/ui/button";
+import { getEthEarnContract } from "@/lib/ContractInteraction";
+import { ethers } from "ethers";
 import Image from "next/image";
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type initialValueType = {
   id: string,
@@ -39,6 +41,54 @@ export default function Home() {
     endDate:  0,
     pay: 0
   });
+  const [userCategory, setUserCategory] = useState<string>("");
+  const [walletAddress, setWalletAddress] = useState<string>();
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    const checkWalletConnection = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          console.log(provider.getSigner());
+          const accounts = await provider.listAccounts();
+          if (accounts.length > 0) {
+            setWalletAddress(accounts[0]);
+            setIsConnected(true);
+          }
+        } catch (error) {
+          console.error("Failed to check wallet connection:", error);
+          setError("Failed to connect to wallet. Please try again.");
+        }
+      }else {
+        alert("Wallet is");
+      }
+    };
+
+    checkWalletConnection();
+  }, []);
+
+  const fetchUserCategory = async () => {
+    const contract = await getEthEarnContract();
+
+    if(!contract) {
+      alert("Unable to get user profile");
+      return;
+    }
+
+    const fetchedProfile = await contract.viewMyProfile();
+
+    return fetchedProfile.category;
+  }
+
+  useEffect(() => {
+    if(isConnected && walletAddress) {
+      fetchUserCategory().then((res) => {
+        setUserCategory(res);
+      })
+    }
+  }, [walletAddress, isConnected]);
 
 
   return (
@@ -66,8 +116,10 @@ export default function Home() {
               <span>Ends: {activeBounty.endDate}</span>
             </div>
 
-            <Button className="w-full mt-5">Make Submission</Button>
+            {userCategory === "bounty_hunter" && <>
+              <Button className="w-full mt-5">Make Submission</Button>
             <span className="text-sm text-gray-600 font-bold">N/B: Submissions can only be made by bounty hunters</span>
+            </>}
           </div>
         )}
        </div>
