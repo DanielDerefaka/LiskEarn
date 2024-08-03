@@ -3,7 +3,7 @@ import { getSigner } from './ethers';
 import EthEarnABI from './contractAbi.json';
 import { Bounty, Submission, UserData } from '../types';
 
-const CONTRACT_ADDRESS = "0x6cB61A1D885FA497a6a6AC3A3600Fd9bACaeC174";
+const CONTRACT_ADDRESS = "0x8Bd684838524456C5C4396dB0ab6E903D42d3893";
 
 
 

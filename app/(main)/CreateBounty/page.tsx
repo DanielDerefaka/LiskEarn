@@ -27,6 +27,11 @@ const Page: React.FC = () => {
       });
       await contractInteractions.makeBounty(name, description, pay, endDateTimestamp);
       alert('Bounty created successfully!');
+
+      setName("");
+      setDescription("");
+      setEndDate("00:00:00 00:00");
+      setPay(0);
     } catch (error) {
       console.error("Failed to create bounty:", error);
       setError('Failed to create bounty. See console for details.');

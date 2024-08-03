@@ -2,8 +2,9 @@ import { ethers } from 'ethers';
 import { getSigner } from './ethers';
 import EthEarnABI from './contractAbi.json';
 import { Bounty, Submission, UserData } from '../types';
+import { strict } from 'assert';
 
-const CONTRACT_ADDRESS = "0x6cB61A1D885FA497a6a6AC3A3600Fd9bACaeC174";
+const CONTRACT_ADDRESS = "0x8Bd684838524456C5C4396dB0ab6E903D42d3893";
 
 const getEthEarnContract = () => {
   const signer = getSigner();
@@ -19,6 +20,17 @@ export const contractInteractions = {
       await tx.wait();
     } catch (error) {
       console.error("Error creating user:", error);
+      throw error;
+    }
+  },
+
+  updateUserProfile: async (name: string, category: string, profileImg: string): Promise<UserData> =>{
+    try {
+      const contract = getEthEarnContract();
+      const tx = contract.updateUserProfile(name, category, profileImg);
+      return tx;
+    } catch (error) {
+      console.log("Error updating user profile: ", error);
       throw error;
     }
   },

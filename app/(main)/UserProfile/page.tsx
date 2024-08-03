@@ -6,6 +6,7 @@ import { UserData } from '@/types';
 import ConnectWallet from '@/components/shared/ConnectWallet';
 import Image from 'next/image';
 import { ethers } from 'ethers';
+import contractInteractions from '@/lib/Contract';
 
 const Profile: NextPage = () => {
   const [profile, setProfile] = useState<UserData | null>(null);
@@ -107,30 +108,37 @@ const Profile: NextPage = () => {
             </div>
           ) : profile ? (
             <div className="space-y-6">
-              <div className="flex items-center space-x-6">
-                {profile.profileImg && (
-                  <Image 
-                    src={profile.profileImg} 
-                    alt="Profile" 
-                    width={100} 
-                    height={0} 
-                    className="rounded-full object-cover w-10 h-10"
-                  />
-                )}
+              <div className='flex justify-between items-center'>
+                <div className="flex items-center space-x-6">
+                  {profile.profileImg && (
+                    <Image 
+                      src={"/"+profile.profileImg} 
+                      alt="Profile" 
+                      width={100} 
+                      height={0} 
+                      className="rounded-full object-cover w-10 h-10"
+                    />
+                  )}
+                  <div>
+                    <h2 className="text-2xl font-semibold">{profile.name}</h2>
+                    <p className="text-gray-600">{profile.category}</p>
+                  </div>
+                </div>
                 <div>
-                  <h2 className="text-2xl font-semibold">{profile.name}</h2>
-                  <p className="text-gray-600">{profile.category}</p>
+                  <p>Email: {profile.email}</p>
                 </div>
               </div>
 
               <form className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Full Name</label>
                   <input 
                     type="text" 
-                    id="email" 
-                    value={profile.email} 
-                    readOnly 
+                    id="name" 
+                    value={profile.name}  
+                    onChange={(e) => {
+                      setProfile({...profile,name: e.target.value});
+                    } }
                     className="mt-1 block w-full  rounded-md border-gray-300 shadow-sm focus:border-transparent focus:ring-transparent p-5 sm:text-sm"
                   />
                 </div>
@@ -140,18 +148,25 @@ const Profile: NextPage = () => {
                   <select 
                     id="category" 
                     value={profile.category} 
-                    disabled 
                     className="mt-1 block w-full rounded-md border-gray-300 p-5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => {
+                      setProfile({...profile,category: e.target.value});
+                    }}
                   >
                     <option value="creator">Creator</option>
                     <option value="bounty_hunter">Bounty Hunter</option>
                   </select>
                 </div>
-              </form>
+                <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={async (e) => {
+                  e.preventDefault();
 
-              <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Edit Profile
+                  let pro = await contractInteractions.updateUserProfile(profile.name, profile.email, profile.profileImg);
+
+                  setProfile(pro);
+                }}>
+                  Edit Profile
               </button>
+              </form>
             </div>
           ) : (
             <div className="text-center py-8">
