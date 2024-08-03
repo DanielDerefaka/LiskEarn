@@ -12,8 +12,8 @@ const getEthEarnContract = () => {
 };
 
 export const contractInteractions = {
-   // User functions
-   createUser: async (name: string, email: string, category: string, profileImg: string): Promise<void> => {
+  // User functions
+  createUser: async (name: string, email: string, category: string, profileImg: string): Promise<void> => {
     try {
       const contract = getEthEarnContract();
       const tx = await contract.createUser(name, email, category, profileImg);
@@ -103,6 +103,17 @@ export const contractInteractions = {
     }
   },
 
+  endBounty: async (bountyId: number): Promise<void> => {
+    try {
+      const contract = getEthEarnContract();
+      const tx = await contract.endBounty(bountyId);
+      await tx.wait();
+    } catch (error) {
+      console.error("Error ending bounty:", error);
+      throw error;
+    }
+  },
+
   // Submission functions
   makeSubmission: async (bountyId: number, content: string): Promise<void> => {
     try {
@@ -137,17 +148,6 @@ export const contractInteractions = {
     }
   },
 
-  updateUserSubmissionForBounty: async (bountyId: number, content: string): Promise<void> => {
-    try {
-      const contract = getEthEarnContract();
-      const tx = await contract.updateUserSubmissionForBounty(bountyId, content);
-      await tx.wait();
-    } catch (error) {
-      console.error("Error updating submission:", error);
-      throw error;
-    }
-  },
-
   // Admin functions
   approveSubmission: async (bountyId: number, submissionId: number): Promise<void> => {
     try {
@@ -156,6 +156,18 @@ export const contractInteractions = {
       await tx.wait();
     } catch (error) {
       console.error("Error approving submission:", error);
+      throw error;
+    }
+  },
+
+  // New function to get a user's profile
+  getAUserProfile: async (walletAddress: string): Promise<UserData> => {
+    try {
+      const contract = getEthEarnContract();
+      const profile = await contract.getAUserProfile(walletAddress);
+      return profile;
+    } catch (error) {
+      console.error("Error getting user profile:", error);
       throw error;
     }
   },

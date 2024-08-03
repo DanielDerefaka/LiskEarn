@@ -17,6 +17,11 @@ export const sidebarLinks = [
         label: "Create Bounty",
       },
     
+      {
+        imgURL: "/home.svg",
+        route: "/CreatedBounty",
+        label: "My Bounty",
+      },
   
     
   

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import contractInteractions from "@/lib/Contract";
-import { redirect } from "next/navigation";
+import { useRouter} from "next/navigation";
 import ConnectWallet from "./ConnectWallet";
 import { ethers } from 'ethers';
 import ConnectWallett from "./ConnWallet";
@@ -27,7 +27,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function CreateUser() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
+const router = useRouter()
     useEffect(() => {
         const checkWalletConnection = async () => {
           if ((window as any).ethereum) {
@@ -83,7 +83,7 @@ export default function CreateUser() {
         description: "Your user profile has been successfully created.",
       });
 
-      redirect("/")
+      router.push("/")
    
     } catch (error) {
       console.error("Error creating user:", error);
@@ -157,7 +157,7 @@ export default function CreateUser() {
         <div>
           <Label htmlFor="profileImg">Please Connect Your Wallet</Label> <br />
           
-        <button className="bg-black text-white mt-2 rounded-sm p-2 px-2 py-4">
+        <button className="bg-black-2 text-white mt-2 rounded-sm p-2 px-2 py-4">
         <ConnectWallett/>
         </button>
         </div>
