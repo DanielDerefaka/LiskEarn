@@ -26,5 +26,26 @@ export const sidebarLinks = [
     
   
     
+
+  ];
+
+  export const UsersidebarLinks = [
+    {
+      imgURL: "/home.svg",
+      route: "/profile",
+      label: "Profile",
+    },
+  
+    {
+        imgURL: "/home.svg",
+        route: "/submissions",
+        label: "Submissions",
+      },
+    
+     
+  
+    
+  
+    
   ];
   

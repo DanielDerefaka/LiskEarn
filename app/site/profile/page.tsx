@@ -171,15 +171,7 @@ const Profile: NextPage = () => {
                     <option value="bounty_hunter">Bounty Hunter</option>
                   </select>
                 </div>
-                {/* <button className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={async (e) => {
-                  e.preventDefault();
-
-                  let pro = await contractInteractions.updateUserProfile(profile.name, profile.email, profile.profileImg);
-
-                  setProfile(pro);
-                }}>
-                  Edit Profile
-              </button> */}
+               
               </form>
             </div>
           ) : (
