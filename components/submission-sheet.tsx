@@ -46,7 +46,7 @@ const SubmissionSheet = ({id}: Props) => {
                         <div>
                             <Button className={`${!s.submissionState ? "bg-green-600" : "bg-gray-600 hover:bg-gray-600"}`} onClick={async (e) => {
                                 e.preventDefault();
-                                if(!s.bountyState) {
+                                if(!s.submissionState) {
                                     try {
                                         await contractInteractions.approveSubmission(s.bountyId, s.id);
                                         alert("Submission approved, Refresh to view changes");
