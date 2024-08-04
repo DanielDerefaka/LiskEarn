@@ -8,6 +8,8 @@
 
   </div>
 
+  </div>
+
  # Lisk Bounty Platform
 
 ## A decentralized bounty application built on the Lisk blockchain
@@ -76,9 +78,3 @@ This project is a Web3 bounty platform  on the Lisk blockchain. It allows users 
 - Blockchain Rsu Dev Team 
 
 
-  
-
-    
-
-
-</div>
