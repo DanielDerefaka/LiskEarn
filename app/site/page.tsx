@@ -24,6 +24,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import SubmissionPage from "@/components/Submission";
+import DOMPurify from 'dompurify';
+
+interface BountyDescriptionProps {
+  description: string;
+}
 
 
 type initialValueType = {
@@ -58,6 +63,16 @@ function formatDate(dateInput: number | string): string {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
   return date.toLocaleDateString(undefined, options);
 }
+
+
+const BountyDescription: React.FC<BountyDescriptionProps> = ({ description }) => {
+  const sanitizedDescription = DOMPurify.sanitize(description);
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+  );
+};
+
 
 const activeBountyContext = createContext({
   val: initialValue,
@@ -146,7 +161,9 @@ export default function Home() {
                   <Card className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
                     <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6">
                       <CardTitle className="text-2xl font-bold truncate">{activeBounty.name}</CardTitle>
-                      <CardDescription className="text-purple-100 mt-2">{activeBounty.description}</CardDescription>
+                      <CardDescription className="text-purple-100 mt-2">
+                      <BountyDescription description={activeBounty.description} />
+                      </CardDescription>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-center mb-6">
