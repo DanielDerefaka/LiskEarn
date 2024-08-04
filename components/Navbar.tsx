@@ -17,7 +17,7 @@ import Loading from "./Loading";
 
 interface Profile {
   name: string;
-  category: "creator" | "bounty_hunter";
+  category: "creator" | "bounty_hunter" | "Creator";
   profileImg: string;
 }
 
@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
     if (isLoading) return <div className="text-white"><Loading/></div>;
     if (!isConnected) return <ConnectButton />;
     if (profile) {
-      if (profile.category === "creator") {
+      if (profile.category === "creator" || profile.category === "Creator") {
         return (
           <Link href="/dashboard">
             <button className="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md transition duration-300 hover:bg-indigo-100">
@@ -155,7 +155,12 @@ const Navbar: React.FC = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 mt-2">
               <DropdownMenuItem>
-                <Link href="/profile" className="w-full">Profile</Link>
+                <Link href="/site/profile" className="w-full">Profile</Link>
+               
+              </DropdownMenuItem>
+               <DropdownMenuItem>
+               
+                <Link href="/site/submissions" className="w-full">My Submissions</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={disconnectWallet}>
@@ -188,7 +193,7 @@ const Navbar: React.FC = () => {
                 <Link href="/site" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
                   Bounties
                 </Link>
-                <Link href="/submissions" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/site/submissions" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
                   Submissions
                 </Link>
                 <Link href="/dev-connect" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
