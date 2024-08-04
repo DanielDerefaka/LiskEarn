@@ -196,7 +196,7 @@ const Navbar: React.FC = () => {
                 <Link href="/site/submissions" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
                   Submissions
                 </Link>
-                <Link href="/dev-connect" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
                   Dev Connect
                 </Link>
               </div>

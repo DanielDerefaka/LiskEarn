@@ -340,6 +340,9 @@
   }
 
   /* Root Layout */
+  .root-layout {
+    @apply flex h-16 items-center justify-between p-5 shadow-creditCard sm:p-8 md:hidden;
+  }
 
   /* Bank Info */
   .bank-info_content {

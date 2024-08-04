@@ -6,6 +6,7 @@ import { Poppins } from "next/font/google";
 
 
 import {redirect} from 'next/navigation'
+import MobileNav from "@/components/MobileNav";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -31,9 +32,9 @@ export  default async function RootLayout ({
         <Sidebar  />
         <div className="flex size-full flex-col ">
           <div className="root-layout">
-            {/* <Image src="/icons/logo.svg" alt="logo" width={30} height={30} /> */}
+            <Image src="/lisk_logo.png" alt="logo" width={30} height={30} />
             <div>
-            {/* <MobileNav user={loggedIn} /> */}
+            <MobileNav />
             </div>
           </div>
           {children}
