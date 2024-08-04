@@ -60,7 +60,7 @@ const page = (props: Props) => {
     }, [isConnected, walletAddress])
   return (
     <div>
-        <h3>My Bounties</h3>
+        <h3>My Submissions</h3>
         {
                 (!submissions || submissions.length <= 0) ? (<h3>No submissions made</h3>) : submissions!.map((s, i) =>( 
                     <Card key={i}>
