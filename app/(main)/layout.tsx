@@ -4,9 +4,6 @@ import Image from "next/image";
 import { Poppins } from "next/font/google";
 // import MobileNav from "@/components/MobileNav";
 
-
-import {redirect} from 'next/navigation'
-
 const poppins = Poppins({
     subsets: ["latin"],
     weight: ["400", "500", "600", "700", "800"], // Add the weights you need
@@ -19,10 +16,6 @@ export  default async function RootLayout ({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-
-
-
 
   return (
     <html lang="en">

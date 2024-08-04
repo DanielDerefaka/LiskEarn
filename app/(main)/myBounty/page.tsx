@@ -20,6 +20,7 @@ import { stat } from "fs";
 import { getEthEarnContract } from "@/lib/ContractInteraction";
 import MapBounties from "@/components/MapBounties";
 import { initializeEthers } from "@/lib/ethers";
+import { usePathname, useRouter } from "next/navigation";
 
 type BountyProp = {
     name: string,
@@ -38,7 +39,8 @@ const BountySec = () => {
     const [walletAddress, setWalletAddress] = useState<string>();
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const [error, setError] = useState<string>();
-    const [fetch, setFetch] = useState<number>(0);
+    const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         const checkWalletConnection = async () => {
@@ -57,6 +59,30 @@ const BountySec = () => {
 
         checkWalletConnection();
     }, []);
+
+  const fetchUserCategory = async () => {
+    const contract = await getEthEarnContract();
+
+    if (!contract) {
+      alert("Unable to get user profile");
+      return;
+    }
+
+    const fetchedProfile = await contract.viewMyProfile();
+
+    return fetchedProfile.category;
+  }
+
+  useEffect(() => {
+    if (isConnected && walletAddress) {
+      fetchUserCategory().then((res) => {
+        if(res === "bounty_hunter"){
+          alert("Page only accessible to bounty creators");
+          router.push("/site");
+        }
+      })
+    }
+  }, [walletAddress, isConnected]);
 
     const fetchBounties = async () => {
         let bounties = await contractInteractions.getUserBounties();

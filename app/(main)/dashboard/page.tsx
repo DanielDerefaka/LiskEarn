@@ -5,7 +5,7 @@ import HeaderBox from "@/components/shared/HeaderBox";
 import RightSidebar from "@/components/shared/RightSidebar";
 import { ethers } from 'ethers';
 import { getEthEarnContract } from '@/lib/ContractInteraction';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ConnectButton from '@/components/shared/ConnectWallet';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,7 +25,7 @@ const Page: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
@@ -53,6 +53,30 @@ const Page: React.FC = () => {
 
     checkWalletConnection();
   }, []);
+
+  const fetchUserCategory = async () => {
+    const contract = await getEthEarnContract();
+
+    if (!contract) {
+      alert("Unable to get user profile");
+      return;
+    }
+
+    const fetchedProfile = await contract.viewMyProfile();
+
+    return fetchedProfile.category;
+  }
+
+  useEffect(() => {
+    if (isConnected && walletAddress) {
+      fetchUserCategory().then((res) => {
+        if(res === "bounty_hunter"){
+          alert("Page only accessible to bounty creators");
+          router.push("/site");
+        }
+      })
+    }
+  }, [walletAddress, isConnected]);
 
   useEffect(() => {
     const fetchProfile = async () => {

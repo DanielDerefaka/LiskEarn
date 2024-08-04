@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import HeaderBox from "@/components/shared/HeaderBox";
 import { ethers } from 'ethers';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ConnectWallet from '@/components/shared/ConnectWallet';
 import contractInteractions from '@/lib/Contract';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { getEthEarnContract } from '@/lib/ContractInteraction';
 
 const Page: React.FC = () => {
   const [name, setName] = useState('');
@@ -19,6 +20,10 @@ const Page: React.FC = () => {
   const [pay, setPay] = useState('');
   const [endDate, setEndDate] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +42,7 @@ const Page: React.FC = () => {
       setDescription("");
       setEndDate("");
       setPay("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create bounty:", error);
       setError('Failed to create bounty. See console for details.');
       alert(`Error: ${error.message || error}`);
@@ -60,6 +65,32 @@ const Page: React.FC = () => {
       setError('Please install MetaMask!');
     }
   };
+
+  const fetchUserCategory = async () => {
+    const contract = await getEthEarnContract();
+
+    if (!contract) {
+      alert("Unable to get user profile");
+      return;
+    }
+
+    const fetchedProfile = await contract.viewMyProfile();
+
+    return fetchedProfile.category;
+  }
+
+  useEffect(() => {
+    if (isConnected && walletAddress) {
+      fetchUserCategory().then((res) => {
+        console.log(res);
+        
+        if(res === "bounty_hunter"){
+          alert("Page only accessible to bounty creators");
+          router.push("/site");
+        }
+      })
+    }
+  }, [walletAddress, isConnected]);
 
   const modules = {
     toolbar: [
