@@ -22,7 +22,7 @@ const SubmissionSheet = ({id}: Props) => {
               bountyState: subb.bountyState,
               submissionState: subb.submissionState,
               submissionOwner: subb.submissionOwner,
-            //   timestamp: subb.timestamp.toNumber(),
+              timestamp: subb.timestamp.toNumber(),
             };
         }
 
