@@ -63,7 +63,7 @@ const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, st
 
       <div className='text-right h-full flex flex-col justify-between items-end'>
         <p className="text-bold font-mono">{pay}</p>
-        {endBounty && <Button className={'mt-5 hover:bg-red-600'} onClick={async () => {
+        {(endBounty && state) && <Button className={'mt-5 hover:bg-red-600'} onClick={async () => {
           await contractInteractions.endBounty(parseInt(id));
           setFetch!((prev) => prev+1);
           alert("Bounty ended successfully, Refresh to view changes");

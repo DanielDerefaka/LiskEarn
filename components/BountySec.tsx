@@ -118,13 +118,34 @@ const BountySec = () => {
           }}>Ended</TabsTrigger>
         </TabsList>
         <div className="border-b-[1px] border-gray-500 rounded"></div>
-        <TabsContent value="open">
+        <TabsContent value="all">
           {
             Bounties.map((b: BountyProp, i) => {
               return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id}  />
             })
           }
         </TabsContent>
+        <TabsContent value="open">
+          {
+            Bounties.map((b: BountyProp, i) => {
+              if(b.name == "" || b.name == undefined || b.name == null || b.pay <= 0) {
+                return <></>
+              }
+              return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id}  />
+            })
+          }
+        </TabsContent>
+        <TabsContent value="ended">
+          {
+            Bounties.map((b: BountyProp, i) => {
+              if(b.name == "" || b.name == undefined || b.name == null || b.pay <= 0) {
+                return <></>
+              }
+              return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id}  />
+            })
+          }
+        </TabsContent>
+        
         <TabsContent value="review"></TabsContent>
         <TabsContent value="completed"></TabsContent>
       </Tabs>

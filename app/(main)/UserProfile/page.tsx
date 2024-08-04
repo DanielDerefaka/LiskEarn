@@ -131,7 +131,7 @@ const Profile: NextPage = () => {
 
               <form className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Full Name</label>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
                   <input 
                     type="text" 
                     id="name" 
@@ -142,6 +142,19 @@ const Profile: NextPage = () => {
                     className="mt-1 block w-full  rounded-md border-gray-300 shadow-sm focus:border-transparent focus:ring-transparent p-5 sm:text-sm"
                   />
                 </div>
+                <div>
+                  <label htmlFor="walletAddress" className="block text-sm font-medium text-gray-700">Wallet Address</label>
+                  <input 
+                    type="text" 
+                    id="walletAddress" 
+                    value={profile.walletAddress}  
+                    // onChange={(e) => {
+                    //   setProfile({...profile,name: e.target.value});
+                    // } }
+                    readOnly
+                    className="mt-1 block w-full  rounded-md border-gray-300 shadow-sm focus:border-transparent focus:ring-transparent p-5 sm:text-sm"
+                  />
+                </div>
 
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
@@ -149,9 +162,10 @@ const Profile: NextPage = () => {
                     id="category" 
                     value={profile.category} 
                     className="mt-1 block w-full rounded-md border-gray-300 p-5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    onChange={(e) => {
-                      setProfile({...profile,category: e.target.value});
-                    }}
+                    // onChange={(e) => {
+                    //   setProfile({...profile,category: e.target.value});
+                    // }}
+                    disabled
                   >
                     <option value="creator">Creator</option>
                     <option value="bounty_hunter">Bounty Hunter</option>

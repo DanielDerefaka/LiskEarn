@@ -7,6 +7,7 @@ import { getEthEarnContract } from '@/lib/ContractInteraction';
 import { useRouter } from 'next/navigation';
 import ConnectWallet from '@/components/shared/ConnectWallet';
 import contractInteractions from '@/lib/Contract';
+import { Input } from '@/components/ui/input';
 
 const Page: React.FC = () => {
   const [name, setName] = useState('');
@@ -79,7 +80,7 @@ const Page: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Bounty Name</label>
-              <input
+              <Input
                 type="text"
                 id="name"
                 value={name}
@@ -96,7 +97,7 @@ const Page: React.FC = () => {
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 h-[8rem] border border-slate-300 px-2 py-2 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Enter description"
                 required
               />
@@ -104,7 +105,7 @@ const Page: React.FC = () => {
 
             <div>
               <label htmlFor="pay" className="block text-sm font-medium text-gray-700">Pay (in ETH)</label>
-              <input
+              <Input
                 type="number"
                 id="pay"
                 value={pay}
@@ -117,7 +118,7 @@ const Page: React.FC = () => {
 
             <div>
               <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">End Date</label>
-              <input
+              <Input
                 type="datetime-local"
                 id="endDate"
                 value={endDate}
