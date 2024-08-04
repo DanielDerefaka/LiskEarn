@@ -1,54 +1,84 @@
+// components/ConnectButton.tsx
+"use client"
 import React, { useState, useEffect } from 'react';
-import { initializeEthers } from '@/lib/ethers';
+import { ethers } from 'ethers';
 
-const ConnectWallet: React.FC = () => {
-  const [connected, setConnected] = useState(false);
-  const [address, setAddress] = useState('');
+const ConnectButton: React.FC = () => {
+    const [account, setAccount] = useState<string | null>(null);
+    const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
-  const connectWallet = async () => {
-    try {
-      const { signer } = await initializeEthers();
-      const address = await signer.getAddress();
-      setAddress(address);
-      setConnected(true);
-      // Removed the window.location.reload() to prevent automatic page refresh
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-    }
-  };
-
-  useEffect(() => {
-    // Check if already connected
-    const checkConnection = async () => {
-      try {
-        const { provider } = await initializeEthers();
-        const accounts = await provider.listAccounts();
-        if (accounts.length > 0) {
-          setAddress(accounts[0]);
-          setConnected(true);
+    useEffect(() => {
+        // Check if already connected
+        checkConnection();
+        
+        // Listen for account changes
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts: string[]) => {
+                if (accounts.length > 0) {
+                    setAccount(accounts[0]);
+                } else {
+                    setAccount(null);
+                    setProvider(null);
+                }
+            });
         }
-      } catch (error) {
-        console.error("Failed to check wallet connection:", error);
-      }
+
+        return () => {
+            // Clean up listener
+            if (window.ethereum) {
+                window.ethereum.removeAllListeners('accountsChanged');
+            }
+        };
+    }, []);
+
+    const checkConnection = async () => {
+        if (window.ethereum) {
+            const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await web3Provider.listAccounts();
+            if (accounts.length > 0) {
+                setAccount(accounts[0]);
+                setProvider(web3Provider);
+            }
+        }
     };
 
-    checkConnection();
-  }, []);
+    const connectWallet = async () => {
+        if (window.ethereum) {
+            try {
+                const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+                await web3Provider.send("eth_requestAccounts", []);
+                const signer = web3Provider.getSigner();
+                const connectedAddress = await signer.getAddress();
+                setAccount(connectedAddress);
+                setProvider(web3Provider);
+                console.log('Provider:', web3Provider);
+            } catch (error) {
+                console.error('User rejected the request.');
+            }
+        } else {
+            console.error('No crypto wallet found. Please install it.');
+        }
+    };
 
-  return (
-    <div>
-      {connected ? (
-        <p>Connected: {address.slice(0, 6)}...{address.slice(-4)}</p>
-      ) : (
-        <button 
-          onClick={connectWallet}
-          className="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 hover:bg-indigo-700"
-        >
-          Connect Wallet
+    const disconnectWallet = () => {
+        setAccount(null);
+        setProvider(null);
+    };
+
+    const handleClick = () => {
+        if (account) {
+            disconnectWallet();
+        } else {
+            connectWallet();
+        }
+    };
+
+    
+    return (
+        <button onClick={handleClick}>
+            {account ? `Disconnect: ${account.slice(0, 6)}...${account.slice(-4)}` : 'Connect Wallet'}
         </button>
-      )}
-    </div>
-  );
+    );
 };
 
-export default ConnectWallet;
+export default ConnectButton;
