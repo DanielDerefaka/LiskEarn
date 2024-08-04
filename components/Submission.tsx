@@ -9,22 +9,24 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const SubmissionPage: React.FC = () => {
-  const [bountyId, setBountyId] = useState<number>(0);
+type Props = {
+  id: number,
+  walletAddress: string
+}
+
+const Submission = ({id, walletAddress}: Props) => {
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (id: number) => {
     setError(null);
     setSuccess(null);
     try {
-      await contractInteractions.makeSubmission(bountyId, content);
+      await contractInteractions.makeSubmission(id, content);
       setSuccess("Submission made successfully!");
       setContent("");
-      setBountyId(0);
     } catch (error) {
       console.error("Failed to make submission:", error);
       setError("Failed to make submission. See console for details.");
@@ -32,7 +34,7 @@ const SubmissionPage: React.FC = () => {
   };
 
   return (
-    <section className="py-12">
+    <section className="py-12 overflow-hidden">
       <div className="max-w-lg mx-auto">
         <Card>
           <CardHeader>
@@ -49,20 +51,10 @@ const SubmissionPage: React.FC = () => {
                 <span className="block sm:inline">{success}</span>
               </div>
             )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="bountyId" className="block text-sm font-medium text-gray-700">
-                  Bounty ID
-                </label>
-                <Input
-                  type="number"
-                  id="bountyId"
-                  value={bountyId}
-                  onChange={(e) => setBountyId(Number(e.target.value))}
-                  required
-                  className="mt-1 block w-full"
-                />
-              </div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(id);
+            }} className="space-y-4">
               <div>
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700">
                   Submission Content
@@ -73,7 +65,11 @@ const SubmissionPage: React.FC = () => {
                   onChange={(e) => setContent(e.target.value)}
                   required
                   className="mt-1 block w-full"
+                  placeholder="Link to the submission file uploaded on a either google drive or any other online storage location"
                 />
+              </div>
+              <div>
+                <span>Wallet Address: </span><span>{walletAddress}</span>
               </div>
               <Button type="submit" className="w-full">
                 Submit
@@ -84,6 +80,6 @@ const SubmissionPage: React.FC = () => {
       </div>
     </section>
   );
-};
+}
 
-export default SubmissionPage;
+export default Submission

@@ -381,7 +381,7 @@
   }
 
   .sidebar-logo {
-    @apply   text-[26px] font-bold text-black-1 max-xl:hidden;
+    @apply   text-[26px] font-bold text-black-1 max-lg:hidden;
   }
 
   .sidebar-link {

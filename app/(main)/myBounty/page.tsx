@@ -88,7 +88,7 @@ const BountySec = () => {
         <div className="mt-5 flex flex-col gap-3 px-12">
             {
                 Bounties.length > 0 ? Bounties.map((b: BountyProp, i) => {
-                    return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id} endBounty setFetch={setFetch} />
+                    return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id} endBounty />
                 }) : <h3 className="text-2xl">No Bounty found in this category</h3>
             }
         </div>

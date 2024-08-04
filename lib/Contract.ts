@@ -59,6 +59,17 @@ export const contractInteractions = {
     }
   },
 
+  endBounty: async (id: number): Promise<void> => {
+    try {
+      const contract = await getEthEarnContract();
+      const tx = await contract.endBounty(id);
+      await tx.wait();
+    } catch (error) {
+      console.error("Error creating bounty:", error);
+      throw error;
+    }
+  },
+
   getAllActiveBounties: async (): Promise<Bounty[]> => {
     try {
       const contract = await getEthEarnContract();

@@ -104,12 +104,12 @@ const BountySec = () => {
 
   return (
     <div className="mt-5">
-      <Tabs defaultValue="open">
+      <Tabs defaultValue="all">
         <TabsList className=" ">
           
-          {/* <TabsTrigger value="open" onClick={() =>{
-            setState("open")
-          }}>All</TabsTrigger> */}
+          <TabsTrigger value="all" onClick={() =>{
+            setState("all")
+          }}>All</TabsTrigger>
           <TabsTrigger value="open" onClick={() => {
             setState("open");
           }}>Open</TabsTrigger>

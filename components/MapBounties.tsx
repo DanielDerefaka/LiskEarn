@@ -1,6 +1,10 @@
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import { activeBountyContext } from '@/app/site/page';
+import contractInteractions from '@/lib/Contract';
+import { Button } from './ui/button';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import SubmissionSheet from './submission-sheet';
 
 type BountyProp = {
   name: string;
@@ -12,6 +16,7 @@ type BountyProp = {
   key: number;
   state?: boolean;
   id: string;
+  endBounty?: boolean,
 };
 
 function shortenAddress(address: string): string {
@@ -35,6 +40,7 @@ const MapBounties: React.FC<BountyProp> = ({
   key,
   state,
   id,
+  endBounty
 }) => {
   const { setter } = useContext(activeBountyContext);
 
@@ -43,15 +49,18 @@ const MapBounties: React.FC<BountyProp> = ({
       className="p-4 hover:bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg cursor-pointer mb-5 transition-all duration-300 border border-gray-200 hover:border-indigo-300 shadow-sm hover:shadow-md"
       key={key}
       onClick={() => {
-        setter({
-          id,
-          name,
-          owner,
-          timeStamp: entryDate,
-          endDate: endDate,
-          description,
-          pay,
-        });
+        if(!endBounty) {
+          setter({
+            id,
+            name,
+            owner,
+            timeStamp: entryDate,
+            endDate: endDate,
+            description,
+            pay,
+            state
+          });
+        }
       }}
     >
       <div className="flex justify-between items-cente ">
@@ -80,11 +89,39 @@ const MapBounties: React.FC<BountyProp> = ({
         <div className="flex space-x-4">
           <p>🏷️ Bounty</p>
           <p>⏳ Due {formatDate(endDate)}</p>
-          <p>👥 4 Submissions</p>
+          {/* <p>👥 4 Submissions</p> */}
         </div>
         <p className="text-indigo-500 font-medium">
           Uploaded: {formatDate(entryDate)}
         </p>
+        
+      </div>
+      <div className='flex items-start gap-3'>
+      {(endBounty && state) && <>
+        <Button className={'mt-5 bg-red-600 hover:bg-red-400'} onClick={async () => {
+          await contractInteractions.endBounty(parseInt(id));
+          alert("Bounty ended successfully, Refresh to view changes");
+        }
+        }>Cancel Bounty</Button>
+        <Sheet>
+  <SheetTrigger>
+    <Button variant={"outline"} className={'mt-5 border-blue-600 hover:bg-blue-600 hover:text-white'}>View Submissions</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Bounty Submissions</SheetTitle>
+      <SheetDescription>
+        These are all submissions made for this boutny <br />
+        <span>Before approving a submision make sure you've transfered the bounty pay to the submitter's wallet address</span>
+      </SheetDescription>
+    </SheetHeader>
+    <div>
+      <SubmissionSheet id={id} />
+    </div>
+  </SheetContent>
+</Sheet>
+      </>
+        }
       </div>
     </div>
   );
