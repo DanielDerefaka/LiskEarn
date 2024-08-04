@@ -112,7 +112,7 @@ const Profile: NextPage = () => {
                 <div className="flex items-center space-x-6">
                   {profile.profileImg && (
                     <Image 
-                      src={"/"+profile.profileImg} 
+                      src={profile.profileImg} 
                       alt="Profile" 
                       width={100} 
                       height={0} 

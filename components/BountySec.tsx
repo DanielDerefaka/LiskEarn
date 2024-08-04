@@ -102,12 +102,12 @@ const BountySec = () => {
   }, [State, isConnected, walletAddress]);
   return (
     <div className="mt-5">
-      <Tabs defaultValue="all">
+      <Tabs defaultValue="open">
         <TabsList className=" ">
           
-          <TabsTrigger value="all" onClick={() =>{
-            setState("all")
-          }}>All</TabsTrigger>
+          {/* <TabsTrigger value="open" onClick={() =>{
+            setState("open")
+          }}>All</TabsTrigger> */}
           <TabsTrigger value="open" onClick={() => {
             setState("open");
           }}>Open</TabsTrigger>

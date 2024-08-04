@@ -16,3 +16,4 @@ export  const getEthEarnContract = () => {
   console.log("Contract instance created:", contract);
   return contract;
 };
+
