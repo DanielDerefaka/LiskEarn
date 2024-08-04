@@ -44,7 +44,7 @@ const SubmissionSheet = ({id}: Props) => {
                         <CardTitle className='text-sm font-normal'>{s.submissionOwner}</CardTitle>
                         <CardDescription>{s.content}</CardDescription>
                         <div>
-                            <Button className={`${!s.bountyState ? "bg-green-600" : "bg-gray-600 hover:bg-gray-600"}`} onClick={async (e) => {
+                            <Button className={`${!s.submissionState ? "bg-green-600" : "bg-gray-600 hover:bg-gray-600"}`} onClick={async (e) => {
                                 e.preventDefault();
                                 if(!s.bountyState) {
                                     try {
@@ -54,7 +54,7 @@ const SubmissionSheet = ({id}: Props) => {
                                         alert("Unable to approve submission");
                                     }
                                 }
-                            }}>{s.bountyState ? "Approved" : "Approve"}</Button>
+                            }}>{s.submissionState ? "Approved" : "Approve"}</Button>
                         </div>
                     </Card>
                 ))
