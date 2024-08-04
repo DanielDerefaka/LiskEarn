@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { initializeEthers } from '@/lib/ethers';
-import WalletConnectProvider from "@walletconnect/web3-provider";
 import { ethers } from 'ethers';
+import EthereumProvider from '@walletconnect/ethereum-provider';
 
 const ConnectWallet: React.FC = () => {
   const [connected, setConnected] = useState(false);
@@ -17,8 +16,10 @@ const ConnectWallet: React.FC = () => {
         await provider.send("eth_requestAccounts", []);
       } else {
         // WalletConnect
-        provider = new WalletConnectProvider({
-          infuraId: "84811a63e023e26019d881b8c45c8372", // Replace with your Infura ID
+        provider = await EthereumProvider.init({
+          projectId: '84811a63e023e26019d881b8c45c8372', // Get this from WalletConnect Cloud
+          chains: [1], // Add the chain IDs you want to support
+          showQrModal: true
         });
         await provider.enable();
         provider = new ethers.providers.Web3Provider(provider);
