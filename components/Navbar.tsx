@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Loading from "./Loading";
 
 interface Profile {
   name: string;
@@ -70,43 +71,63 @@ const Navbar: React.FC = () => {
     if (isConnected) fetchProfile();
   }, [walletAddress, isConnected]);
 
-  const disconnectWallet = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      try {
-        // Reset states
-        setWalletAddress(null);
-        setIsConnected(false);
-        setProfile(null);
+  // const disconnectWallet = async () => {
+  //   if (typeof window.ethereum !== "undefined") {
+  //     try {
+  //       // Reset states
+  //       setWalletAddress(null);
+  //       setIsConnected(false);
+  //       setProfile(null);
   
-        // Clear any stored connection data
-        localStorage.removeItem('walletconnect');
+  //       // Clear any stored connection data
+  //       localStorage.removeItem('walletconnect');
   
-        // If using Web3Modal, clear its cached provider
-        // if (web3Modal) {
-        //   await web3Modal.clearCachedProvider();
-        // }
+  //       // If using Web3Modal, clear its cached provider
+  //       // if (web3Modal) {
+  //       //   await web3Modal.clearCachedProvider();
+  //       // }
   
-        // Request MetaMask to disconnect
-        if (window.ethereum.disconnect) {
-          await window.ethereum.disconnect();
-        }
+  //       // Request MetaMask to disconnect
+  //       if (window.ethereum.disconnect) {
+  //         await window.ethereum.disconnect();
+  //       }
   
-        // For older versions of MetaMask or other wallets
-        if (window.ethereum.close) {
-          await window.ethereum.close();
-        }
+  //       // For older versions of MetaMask or other wallets
+  //       if (window.ethereum.close) {
+  //         await window.ethereum.close();
+  //       }
   
-        // Force reload the page to ensure all states are cleared
-        window.location.reload();
-      } catch (error) {
-        console.error("Failed to disconnect wallet:", error);
-        setError("Failed to disconnect wallet. Please try again.");
-      }
-    }
-  };
+  //       // Force reload the page to ensure all states are cleared
+  //       window.location.reload();
+  //     } catch (error) {
+  //       console.error("Failed to disconnect wallet:", error);
+  //       setError("Failed to disconnect wallet. Please try again.");
+  //     }
+  //   }
+  // };
 
+  const disconnectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      // Check if MetaMask is installed and connected
+      if (window.ethereum.isConnected()) {
+        // Disconnect from MetaMask
+        window.ethereum.disconnect()
+          .then(() => {
+            console.log('Disconnected from MetaMask');
+            // Additional actions after disconnection (e.g., updating UI)
+          })
+          .catch((error:any) => {
+            console.error('Error disconnecting from MetaMask:', error);
+          });
+      } else {
+        console.log('MetaMask is not connected');
+      }
+    } else {
+      console.log('MetaMask is not installed');
+    }
+  }
   const renderProfileSection = () => {
-    if (isLoading) return <div className="text-white">Loading...</div>;
+    if (isLoading) return <div className="text-white"><Loading/></div>;
     if (!isConnected) return <ConnectButton />;
     if (profile) {
       if (profile.category === "creator") {

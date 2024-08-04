@@ -1,13 +1,17 @@
 "use client";
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import HeaderBox from "@/components/shared/HeaderBox";
 import { ethers } from 'ethers';
-import { getEthEarnContract } from '@/lib/ContractInteraction';
 import { useRouter } from 'next/navigation';
 import ConnectWallet from '@/components/shared/ConnectWallet';
 import contractInteractions from '@/lib/Contract';
 import { Input } from '@/components/ui/input';
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
 
 const Page: React.FC = () => {
   const [name, setName] = useState('');
@@ -31,12 +35,11 @@ const Page: React.FC = () => {
 
       setName("");
       setDescription("");
-      setEndDate("00:00:00 00:00");
-      setPay(0);
+      setEndDate("");
+      setPay("");
     } catch (error) {
       console.error("Failed to create bounty:", error);
       setError('Failed to create bounty. See console for details.');
-      // Display the actual error message for debugging purposes
       alert(`Error: ${error.message || error}`);
     }
   };
@@ -49,7 +52,6 @@ const Page: React.FC = () => {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         console.log("Wallet connected:", address);
-        // Set the wallet address in the state if needed
       } catch (error) {
         console.error("Failed to connect wallet:", error);
         setError("Failed to connect wallet. Please try again.");
@@ -58,6 +60,23 @@ const Page: React.FC = () => {
       setError('Please install MetaMask!');
     }
   };
+
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ];
 
   return (
     <section className="home font-poppins">
@@ -93,13 +112,14 @@ const Page: React.FC = () => {
 
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-              <textarea
-                id="description"
+              <ReactQuill
+                theme="snow"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="mt-1 h-[8rem] border border-slate-300 px-2 py-2 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                onChange={setDescription}
+                modules={modules}
+                formats={formats}
+                className="mt-1"
                 placeholder="Enter description"
-                required
               />
             </div>
 
