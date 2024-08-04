@@ -4,7 +4,7 @@ import EthEarnABI from './contractAbi.json';
 import { Bounty, Submission, UserData } from '../types';
 import { strict } from 'assert';
 
-const CONTRACT_ADDRESS = "0x8Bd684838524456C5C4396dB0ab6E903D42d3893";
+const CONTRACT_ADDRESS = "0x34c93240C1584D7C9b9592c5246F9F1EE5D65ed5";
 
 const getEthEarnContract = async () => {
   const signer = await getSigner();

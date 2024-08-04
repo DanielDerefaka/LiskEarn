@@ -167,7 +167,7 @@ export default function Home() {
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-center mb-6">
-                        <span className="text-3xl font-bold text-indigo-600">{activeBounty.pay} ETH</span>
+                        <span className="text-3xl font-bold text-indigo-600">{activeBounty.pay} LISK</span>
                         <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Active</span>
                       </div>
                       <div className="space-y-3 text-sm">

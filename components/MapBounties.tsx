@@ -79,7 +79,7 @@ const MapBounties: React.FC<BountyProp> = ({
           {/* <div className={`${state ? "text-green-600" : "text-red-600"}`}>{state ? "Active" : "Ended"}</div> */}
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-indigo-600">{pay} ETH</p>
+          <p className="text-2xl font-bold text-indigo-600">{pay} LISK</p>
           <span className={`text-xs font-semibold px-2 py-1 rounded-full ${state ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-red-800'}`}>
             {state ? 'Active' : 'Ended'}
           </span>

@@ -155,14 +155,14 @@ const Page: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="pay" className="block text-sm font-medium text-gray-700">Pay (in ETH)</label>
+              <label htmlFor="pay" className="block text-sm font-medium text-gray-700">Pay (in LISK)</label>
               <Input
                 type="number"
                 id="pay"
                 value={pay}
                 onChange={(e) => setPay(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                placeholder="Enter payment amount in ETH"
+                placeholder="Enter payment amount in LISK"
                 required
               />
             </div>
