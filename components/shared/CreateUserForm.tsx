@@ -154,13 +154,13 @@ const router = useRouter()
           )}
         </div>
 
-        <div>
+        {/* <div>
           <Label htmlFor="profileImg">Please Connect Your Wallet</Label> <br />
           
         <button className="bg-black-2 text-white mt-2 rounded-sm p-2 px-2 py-4">
-        {/* <ConnectWallett/> */}
+        <ConnectWallett/>
         </button>
-        </div>
+        </div> */}
 
        
         <Button type="submit" className="w-full" disabled={isSubmitting}>
