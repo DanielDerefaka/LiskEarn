@@ -10,7 +10,7 @@
 
   </div>
 
- # Lisk Bounty Platform
+ # Lisk Earn Platform
 
 ## A decentralized bounty application built on the Lisk blockchain
 
