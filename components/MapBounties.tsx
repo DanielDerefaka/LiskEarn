@@ -1,36 +1,49 @@
-import { activeBountyContext } from '@/app/site/page'
-import Image from 'next/image'
-import React, { Dispatch, SetStateAction, useContext } from 'react'
-import { Button } from './ui/button'
-import contractInteractions from '@/lib/Contract'
+import React, { useContext } from 'react';
+import Image from 'next/image';
+import { activeBountyContext } from '@/app/site/page';
 
-type BountyProp ={
-  name: string,
-  description: string,
-  owner: string,
-  pay: number,
-  endDate: number,
-  entryDate: number,
-  key: number,
-  state?: boolean,
-  id: string,
-  endBounty?: boolean,
-  setFetch?: Dispatch<SetStateAction<number>>,
+type BountyProp = {
+  name: string;
+  description: string;
+  owner: string;
+  pay: number;
+  endDate: number;
+  entryDate: number;
+  key: number;
+  state?: boolean;
+  id: string;
+};
+
+function shortenAddress(address: string): string {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
-const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, state, id, endBounty, setFetch}: BountyProp) => {
-  let setter2 = (val: any) => {
 
-  }
+function formatDate(dateInput: number | string): string {
+  const date = typeof dateInput === 'number' ? new Date(dateInput * 1000) : new Date(dateInput);
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString(undefined, options);
+}
 
-  if(!endBounty) {
-    const {setter} = useContext(activeBountyContext);
-    setter2 = setter;
-  }
+
+const MapBounties: React.FC<BountyProp> = ({
+  name,
+  description,
+  owner,
+  pay,
+  endDate,
+  entryDate,
+  key,
+  state,
+  id,
+}) => {
+  const { setter } = useContext(activeBountyContext);
 
   return (
-    <div className={`p-5 hover:bg-gray-200  rounded-md cursor-pointer h-25`} key={key} onClick={() => {
-      if(!endBounty) {
-        setter2({
+    <div 
+      className="p-4 hover:bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg cursor-pointer mb-5 transition-all duration-300 border border-gray-200 hover:border-indigo-300 shadow-sm hover:shadow-md"
+      key={key}
+      onClick={() => {
+        setter({
           id,
           name,
           owner,
@@ -38,41 +51,43 @@ const MapBounties = ({name, description, owner, pay, endDate, entryDate, key, st
           endDate: endDate,
           description,
           pay,
-        })
-      }
-    }}>
-    <div className="flex justify-between">
-      <div className="flex flex-row gap-4 ">
-        <div className="w-10 h-10 bg-black">
-          <Image src="/vercel.svg" alt="img" width={50} height={50} />
-        </div>
-
-        <div>
-          <h1 className="font-bold text-[15px] text-gray-700">
-            {name}
-          </h1>
-          <p className="space-x-1 text-gray-400 text-sm"><span>Uploaded By:</span> {owner}</p>
-          <div className="flex gap-2 text-sm text-gray-400 ">
-            <p>Bounty</p>
-            <p>Due {endDate}</p>
-            <p>4 </p>
+        });
+      }}
+    >
+      <div className="flex justify-between items-cente ">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center">
+            <Image src="/vercel.svg" alt="img" width={30} height={30} className="filter invert" />
           </div>
-          <div className={`${state ? "text-green-600" : "text-red-600"}`}>{state ? "Active" : "Ended"}</div>
+          <div>
+            <h1 className="font-bold text-lg text-gray-800 mb-1">
+              {name}
+            </h1>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">By:</span> {shortenAddress(owner)}
+            </p>
+          </div>
+          {/* <div className={`${state ? "text-green-600" : "text-red-600"}`}>{state ? "Active" : "Ended"}</div> */}
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-bold text-indigo-600">{pay} ETH</p>
+          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${state ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-red-800'}`}>
+            {state ? 'Active' : 'Ended'}
+          </span>
         </div>
       </div>
-
-      <div className='text-right h-full flex flex-col justify-between items-end'>
-        <p className="text-bold font-mono">{pay}</p>
-        {(endBounty && state) && <Button className={'mt-5 hover:bg-red-600'} onClick={async () => {
-          await contractInteractions.endBounty(parseInt(id));
-          setFetch!((prev) => prev+1);
-          alert("Bounty ended successfully, Refresh to view changes");
-        }
-        }>Cancel Bounty</Button>}
+      <div className="mt-3 flex justify-between items-center text-sm text-gray-500">
+        <div className="flex space-x-4">
+          <p>🏷️ Bounty</p>
+          <p>⏳ Due {formatDate(endDate)}</p>
+          <p>👥 4 Submissions</p>
+        </div>
+        <p className="text-indigo-500 font-medium">
+          Uploaded: {formatDate(entryDate)}
+        </p>
       </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default MapBounties
+export default MapBounties;

@@ -1,29 +1,23 @@
-"use client"
-import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import ConnectButton from './shared/ConnectWallet';
-import { getEthEarnContract } from '@/lib/ContractInteraction';
-import { UserData } from '@/types';
-import { useRouter } from 'next/navigation';
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
- 
-import { Button } from "@/components/ui/button"
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ethers } from "ethers";
+import { useRouter } from "next/navigation";
+import ConnectButton from "./shared/ConnectWallet";
+import { getEthEarnContract } from "@/lib/ContractInteraction";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Image from 'next/image';
+} from "@/components/ui/dropdown-menu";
 
 interface Profile {
   name: string;
-  category: 'creator' | 'bounty_hunter';
-  profileImg: string
+  category: "creator" | "bounty_hunter";
+  profileImg: string;
 }
 
 const Navbar: React.FC = () => {
@@ -37,7 +31,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const checkWalletConnection = async () => {
-      if (typeof window.ethereum !== 'undefined') {
+      if (typeof window.ethereum !== "undefined") {
         try {
           const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
           const accounts = await provider.listAccounts();
@@ -58,15 +52,11 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (!walletAddress) return;
-
       setIsLoading(true);
       setError(null);
-
       try {
         const contract = getEthEarnContract();
-        if (!contract) {
-          throw new Error("Failed to get contract instance");
-        }
+        if (!contract) throw new Error("Failed to get contract instance");
         const fetchedProfile = await contract.viewMyProfile();
         setProfile(fetchedProfile);
       } catch (error) {
@@ -77,25 +67,37 @@ const Navbar: React.FC = () => {
       }
     };
 
-    if (isConnected) {
-      fetchProfile();
-    }
+    if (isConnected) fetchProfile();
   }, [walletAddress, isConnected]);
 
-  // Add disconnect wallet function
   const disconnectWallet = async () => {
-    if (typeof window.ethereum !== 'undefined') {
+    if (typeof window.ethereum !== "undefined") {
       try {
         // Reset states
         setWalletAddress(null);
         setIsConnected(false);
         setProfile(null);
-
-        // If using Web3Modal or similar library, you might need to call their disconnect method
-        // await web3Modal.clearCachedProvider();
-
-        // Reload the page to ensure all states are cleared
-        router.refresh();
+  
+        // Clear any stored connection data
+        localStorage.removeItem('walletconnect');
+  
+        // If using Web3Modal, clear its cached provider
+        // if (web3Modal) {
+        //   await web3Modal.clearCachedProvider();
+        // }
+  
+        // Request MetaMask to disconnect
+        if (window.ethereum.disconnect) {
+          await window.ethereum.disconnect();
+        }
+  
+        // For older versions of MetaMask or other wallets
+        if (window.ethereum.close) {
+          await window.ethereum.close();
+        }
+  
+        // Force reload the page to ensure all states are cleared
+        window.location.reload();
       } catch (error) {
         console.error("Failed to disconnect wallet:", error);
         setError("Failed to disconnect wallet. Please try again.");
@@ -104,85 +106,79 @@ const Navbar: React.FC = () => {
   };
 
   const renderProfileSection = () => {
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-
-    if (!isConnected) {
-      return <ConnectButton />;
-    }
-
+    if (isLoading) return <div className="text-white">Loading...</div>;
+    if (!isConnected) return <ConnectButton />;
     if (profile) {
-      if (profile.category === 'creator') {
+      if (profile.category === "creator") {
         return (
           <Link href="/dashboard">
-            <button className='bg-black p-2 px-5 py-2 text-white rounded-sm'>Dashboard</button>
+            <button className="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md transition duration-300 hover:bg-indigo-100">
+              Dashboard
+            </button>
           </Link>
         );
-      } else if (profile.category === 'bounty_hunter') {
-        return <div>
-           <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-      <div className='flex gap-2 rounded-md cursor-pointer hover:bg-slate-50 p-2'>
-            <div> 
-                  <Image src={profile.profileImg} className='rounded-full object-cover w-8 h-8' alt='image' width={30} height={0} />
-            </div>
-            <div className='mt-0'>
-            <p>{profile.name.split(' ')[0]}</p>
-
-            </div>
-
-          </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-      <DropdownMenuItem>
-            <Link href="/UserProfile">  
-            Profille
-            </Link>
-          </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-            <Link href="/UserProfile">  
-            Profille
-            </Link>
-          </DropdownMenuItem>
-        <DropdownMenuItem onClick={disconnectWallet}>
-          Disconnect
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-        </div>;
+      } else if (profile.category === "bounty_hunter") {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 rounded-md cursor-pointer p-2 bg-white bg-opacity-20 hover:bg-opacity-30 transition duration-300">
+                <Image
+                  src={profile.profileImg}
+                  className="rounded-full object-cover w-10 h-10"
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                />
+                <span className="text-white font-medium">{profile.name.split(" ")[0]}</span>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 mt-2">
+              <DropdownMenuItem>
+                <Link href="/UserProfile" className="w-full">Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={disconnectWallet}>
+                Disconnect
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
       }
     }
-
     return (
       <Link href="/auth/CreateAccount">
-        <button>Create Account</button>
+        <button className="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-md transition duration-300 hover:bg-indigo-100">
+          Create Account
+        </button>
       </Link>
     );
   };
 
   return (
-    <nav className="flex fixed w-full top-0 z-10 items-center justify-between flex-wrap bg-black-2 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
-        <Link href="/">
-          <span className="font-semibold text-xl text-black">Lisk Earn</span>
-        </Link>
-      </div>
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div className="text-sm lg:flex-grow">
-          <Link href="/bounties" className="block mt-4 lg:inline-block lg:mt-0  mr-4">
-            Bounties
-          </Link>
-          <Link href="/grant" className="block mt-4 lg:inline-block lg:mt-0  mr-4">
-            Grant
-          </Link>
-          <Link href="/dev-connect" className="block mt-4 lg:inline-block lg:mt-0 ">
-            Dev Connect
-          </Link>
-        </div>
-        <div>
-          {renderProfileSection()}
+    <nav className="fixed w-full top-0 z-10 bg-gradient-to-r from-purple-600 to-indigo-700 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/" className="flex-shrink-0">
+              <span className="text-white text-xl font-bold">Lisk Earn</span>
+            </Link>
+            <div className="hidden md:block ml-10">
+              <div className="flex items-baseline space-x-4">
+                <Link href="/bounties" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
+                  Bounties
+                </Link>
+                <Link href="/grant" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
+                  Grant
+                </Link>
+                <Link href="/dev-connect" className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
+                  Dev Connect
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center">
+            {renderProfileSection()}
+          </div>
         </div>
       </div>
     </nav>
