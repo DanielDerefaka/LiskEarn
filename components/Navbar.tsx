@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
         }
   
         // Force reload the page to ensure all states are cleared
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         console.error("Failed to disconnect wallet:", error);
         setError("Failed to disconnect wallet. Please try again.");

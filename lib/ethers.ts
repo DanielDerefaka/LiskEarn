@@ -14,7 +14,7 @@ export const initializeEthers = async () => {
       // WalletConnect
       const wcProvider = await EthereumProvider.init({
         projectId: '84811a63e023e26019d881b8c45c8372', // Replace with your WalletConnect Cloud Project ID
-        chains: [1135], // Ethereum Mainnet. Add other chain IDs as needed
+        chains: [4202], // Ethereum Mainnet. Add other chain IDs as needed
         showQrModal: true
       });
 
