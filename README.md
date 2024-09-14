@@ -5,7 +5,16 @@
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
     <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
-
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134" height="28" role="img" aria-label="SOLIDITY">
+  <title>SOLIDITY</title>
+  <g shape-rendering="crispEdges">
+    <rect width="134" height="28" fill="#363636"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="100">
+    <image x="9" y="7" width="14" height="14" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgMzIwIj48cGF0aCBkPSJNMzExLjMgMjMzLjRsLTE0MS4xLTgwLjdWMEwzMTEuMyAxNTIuN3pNMTcwLjIgMGwtMTQxLjEgODAuN3Y3Mi43TDE3MC4yIDBNOC45IDE1Mi43bDE0MS4xIDgwLjd2ODYuN0w4LjkgMjMzLjRNMTcwLjIgMzIwbDE0MS4xLTgwLjd2LTcyLjdMMTcwLjIgMzIwIiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4="/>
+    <text transform="scale(.1)" x="765" y="175" textLength="730" fill="#fff" font-weight="bold">SOLIDITY</text>
+  </g>
+</svg>
 
   </div>
 
