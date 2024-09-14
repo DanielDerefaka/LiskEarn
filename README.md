@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
     <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
-     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=solidity&color=00000" alt="solidity" />
+
 
   </div>
 
@@ -15,7 +15,7 @@
 
 ## A decentralized bounty application built on the Lisk blockchain
 
-This project is a Web3 bounty platform  on the Lisk blockchain. It allows users to create, manage, and complete bounties in a decentralized manner. you can view demo application on [Lisk Demo](lisk-earn.vercel.app) and smart contract on [Smart Contract Demo](https://github.com/DanielDerefaka/LiskEarn/blob/master/demo-contract.sol)
+This project is a Web3 bounty platform  on the Lisk blockchain. It allows users to create, manage, and complete bounties in a decentralized manner. you can view demo application on [Lisk Demo](https://lisk-earn.vercel.app/site) and smart contract on [Smart Contract Demo](https://github.com/DanielDerefaka/LiskEarn/blob/master/demo-contract.sol)
 
 ## 🚀 Features
 
@@ -59,7 +59,7 @@ This project is a Web3 bounty platform  on the Lisk blockchain. It allows users 
 2. Install dependencies with `npm install`
 3. Configure your Lisk node connection in `.env`
 4. Run the development server with `npm run dev`
-5. Open [Lisk Demo](lisk-earn.vercel.app) in your browser
+5. Open [Lisk Demo](https://lisk-earn.vercel.app/site) in your browser
 
 ## 💡 How It Works
 
