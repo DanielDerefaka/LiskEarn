@@ -14,7 +14,7 @@
 
 ## A decentralized bounty application built on the Lisk blockchain
 
-This project is a Web3 bounty platform  on the Lisk blockchain. It allows users to create, manage, and complete bounties in a decentralized manner. you can view demo application on [Lisk Demo](lisk-earn.vercel.app) 
+This project is a Web3 bounty platform  on the Lisk blockchain. It allows users to create, manage, and complete bounties in a decentralized manner. you can view demo application on [Lisk Demo](lisk-earn.vercel.app) and smart contract on [Smart Contract Demo](https://github.com/DanielDerefaka/LiskEarn/blob/master/demo-contract.sol)
 
 ## 🚀 Features
 
