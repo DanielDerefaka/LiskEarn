@@ -22,11 +22,11 @@ type Submission = {
 
 const Page = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading2, setIsLoading2] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const router = useRouter();
 
-  const {isConnected, walletAddress, profile} = useConnectionContext();
+  const {isConnected, walletAddress, profile, isLoading} = useConnectionContext();
 
   const fetchSubmissions = async (): Promise<Submission[]> => {
     const sub = await contractInteractions.getUserSubmissions();
@@ -42,15 +42,17 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (isConnected && profile && profile.category == "bounty_hunter") {
-      setIsLoading(true);
-      fetchSubmissions()
-        .then(setSubmissions)
-        .catch((err) => setError(err.message))
-        .finally(() => setIsLoading(false));
-    }else {
-      alert("Page only accessible to bounty hunters");
-      router.push("/dashboard");
+    if(isConnected) {
+      if (profile && profile.category == "bounty_hunter" && !isLoading) {
+        setIsLoading2(true);
+        fetchSubmissions()
+          .then(setSubmissions)
+          .catch((err) => setError(err.message))
+          .finally(() => setIsLoading2(false));
+      }else if(profile && profile.category == "creator") {
+        alert("Page only accessible to bounty hunters");
+        router.push("/dashboard");
+      }
     }
   }, [isConnected, walletAddress, profile]);
 
@@ -75,7 +77,7 @@ const Page = () => {
           {error}
         </div>
       )}
-      {isLoading ? (
+      {isLoading2 ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
             <Skeleton key={i} className="h-48 w-full" />
