@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import { getEthEarnContract } from '@/lib/ContractInteraction';
+import Loading from '@/components/Loading';
 
 const Page: React.FC = () => {
   const [name, setName] = useState('');
@@ -22,11 +23,13 @@ const Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const pathname = usePathname();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const endDateTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
       console.log("Submitting bounty with details:", {
@@ -46,6 +49,8 @@ const Page: React.FC = () => {
       console.error("Failed to create bounty:", error);
       setError('Failed to create bounty. See console for details.');
       alert(`Error: ${error.message || error}`);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -184,7 +189,7 @@ const Page: React.FC = () => {
                 type="submit"
                 className="inline-flex bg-black-1 items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Create Bounty
+                {isLoading ? <Loading /> : "Create Bounty" }
               </button>
             </div>
           </form>
