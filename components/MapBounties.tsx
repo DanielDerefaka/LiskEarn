@@ -30,7 +30,7 @@ function formatDate(dateInput: number | string): string {
 }
 
 
-const MapBounties: React.FC<BountyProp> = ({
+const MapBounties = ({
   name,
   description,
   owner,
@@ -41,7 +41,7 @@ const MapBounties: React.FC<BountyProp> = ({
   state,
   id,
   endBounty
-}) => {
+}: BountyProp) => {
   const { setter } = useContext(activeBountyContext);
 
   return (
@@ -58,7 +58,7 @@ const MapBounties: React.FC<BountyProp> = ({
             endDate: endDate,
             description,
             pay,
-            state
+            state: state!
           });
         }
       }}
@@ -116,7 +116,7 @@ const MapBounties: React.FC<BountyProp> = ({
       </SheetDescription>
     </SheetHeader>
     <div>
-      <SubmissionSheet id={id} />
+      <SubmissionSheet id={parseInt(id)} />
     </div>
   </SheetContent>
 </Sheet>

@@ -2,8 +2,6 @@
 import Bounties from "@/components/Bounties";
 import { Button } from "@/components/ui/button";
 import { getEthEarnContract } from "@/lib/ContractInteraction";
-import { ethers } from "ethers";
-import Image from "next/image";
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Card,
@@ -13,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
 import {
   Dialog,
   DialogContent,
@@ -25,11 +22,11 @@ import {
 } from "@/components/ui/dialog"
 import SubmissionPage from "@/components/Submission";
 import DOMPurify from 'dompurify';
+import { useConnectionContext } from "@/context/isConnected";
 
 interface BountyDescriptionProps {
   description: string;
 }
-
 
 type initialValueType = {
   id: string,
@@ -39,7 +36,7 @@ type initialValueType = {
   timeStamp: number,
   endDate: number,
   pay: number,
-  state?: boolean
+  state: boolean
 };
 
 const initialValue = {
@@ -53,7 +50,6 @@ const initialValue = {
   state: false
 };
 
-
 function shortenAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
@@ -64,7 +60,6 @@ function formatDate(dateInput: number | string): string {
   return date.toLocaleDateString(undefined, options);
 }
 
-
 const BountyDescription: React.FC<BountyDescriptionProps> = ({ description }) => {
   const sanitizedDescription = DOMPurify.sanitize(description);
 
@@ -72,7 +67,6 @@ const BountyDescription: React.FC<BountyDescriptionProps> = ({ description }) =>
     <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
   );
 };
-
 
 const activeBountyContext = createContext({
   val: initialValue,
@@ -91,32 +85,8 @@ export default function Home() {
     state: false
   });
   const [userCategory, setUserCategory] = useState<string>("");
-  const [walletAddress, setWalletAddress] = useState<string>();
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    const checkWalletConnection = async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          console.log(provider.getSigner());
-          const accounts = await provider.listAccounts();
-          if (accounts.length > 0) {
-            setWalletAddress(accounts[0]);
-            setIsConnected(true);
-          }
-        } catch (error) {
-          console.error("Failed to check wallet connection:", error);
-          setError("Failed to connect to wallet. Please try again.");
-        }
-      } else {
-        alert("Wallet is");
-      }
-    };
-
-    checkWalletConnection();
-  }, []);
+  const {walletAddress, isConnected} = useConnectionContext();
 
   const fetchUserCategory = async () => {
     const contract = await getEthEarnContract();
@@ -195,26 +165,21 @@ export default function Home() {
 
                       <Dialog>
                         {
-                          activeBounty.state ? (<DialogTrigger asChild>
+                          activeBounty.state && (<DialogTrigger asChild>
                             <Button className={`w-full  ${activeBounty.state ? "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1" : "bg-gray-600 hover:bg-red-600"}  text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform`}>
                               Make Submission
                             </Button>
-                          </DialogTrigger>) : (<Button className={`w-full  ${activeBounty.state ? "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1" : "bg-gray-600 hover:bg-red-600"}  text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform`}>
-                            Make Submission
-                          </Button>)
+                          </DialogTrigger>)
                         }
                         <DialogContent className="md:max-h-[700px] overflow-auto  md:h-fit h-screen bg-white">
 
 
-                          <SubmissionPage id={activeBounty.id} walletAddress={walletAddress} />
+                          <SubmissionPage id={parseInt(activeBounty.id)} walletAddress={walletAddress as string} />
 
                         </DialogContent>
                       </Dialog>
                     </CardFooter>)}
                   </Card>
-
-
-
 
                   {/* <span className="text-sm text-gray-600 font-bold">N/B: Submissions can only be made by bounty hunters</span> */}
                 </div>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import ConnectWallet from "./shared/ConnectWallet";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -19,7 +20,7 @@ const Sidebar = () => {
       <nav className="flex flex-col gap-4">
         <Link
           href="/dashboard"
-          className="mb-12 flex items-center gap-2"
+          className="mb-8 flex items-center gap-2"
         >
           <Image
             src="/lisk_logo.png"
@@ -30,6 +31,10 @@ const Sidebar = () => {
           />
           <h1 className="sidebar-logo text-2xl font-bold text-black-2 ">Lisk Earn</h1>
         </Link>
+
+        <div className="my-0">
+            <ConnectWallet />
+        </div>
 
         {sidebarLinks.map((item) => {
           const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
@@ -44,20 +49,6 @@ const Sidebar = () => {
             </Link>
           );
         })}
-
-        <div className="mt-auto flex items-center gap-3 p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">
-          <Image
-            src={user.profileImg}
-            width={34}
-            height={34}
-            alt="User Profile"
-            className="rounded-full"
-          />
-          <div>
-            <p className="text-sm font-medium">{user.name.split(' ')[0]}</p>
-            <Link href="/Userprofile" className="text-xs text-blue-300 hover:text-blue-500">View Profile</Link>
-          </div>
-        </div>
       </nav>
     </section>
   );

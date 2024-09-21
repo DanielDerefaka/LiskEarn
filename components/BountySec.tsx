@@ -19,6 +19,7 @@ import { Bounty } from "@/types";
 import { ethers } from "ethers";
 import { stat } from "fs";
 import { getEthEarnContract } from "@/lib/ContractInteraction";
+import { useConnectionContext } from "@/context/isConnected";
 
 type BountyProp ={
   name: string,
@@ -34,29 +35,8 @@ type BountyProp ={
 const BountySec = () => {
   const [Bounties, setBounties] = useState<any[]>([]);
   const [State, setState] = useState<string>("all");
-  const [walletAddress, setWalletAddress] = useState<string>();
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const {walletAddress, isConnected, profile} = useConnectionContext();
   const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    const checkWalletConnection = async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const accounts = await provider.listAccounts();
-          if (accounts.length > 0) {
-            setWalletAddress(accounts[0]);
-            setIsConnected(true);
-          }
-        } catch (error) {
-          console.error("Failed to check wallet connection:", error);
-          setError("Failed to connect to wallet. Please try again.");
-        }
-      }
-    };
-
-    checkWalletConnection();
-  }, []);
 
   const fetchBounties = async () => {
     let bounties = [];
@@ -97,10 +77,8 @@ const BountySec = () => {
   }
 
   useEffect(() => {
-    if(isConnected && walletAddress) {  
-        fetchBounties();
-    }
-  }, [State, isConnected, walletAddress]);
+    if(isConnected && walletAddress && profile) fetchBounties();
+  }, [State, isConnected, walletAddress, profile]);
 
   return (
     <div className="mt-5">

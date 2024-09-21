@@ -14,6 +14,7 @@ import Link from "next/link";
 import { sidebarLinks } from "@/lib/constants";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import ConnectWallet from "./shared/ConnectWallet";
 
 
 const MobileNav = () => {
@@ -42,9 +43,13 @@ const MobileNav = () => {
             </h1>
           </Link>
 
+          <div className="mb-0 mt-8">
+              <ConnectWallet />
+          </div>
+
           <div className="mobilenav-sheet">
             <SheetClose asChild>
-              <nav className="flex h-full flex-col gap-6 pt-16  text-white">
+              <nav className="flex h-full flex-col gap-6 pt-8  text-white">
                 {sidebarLinks.map((item) => {
                   const isActive =
                     pathname === item.route ||

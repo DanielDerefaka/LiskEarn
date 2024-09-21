@@ -188,9 +188,6 @@ const Page: React.FC = () => {
               </button>
             </div>
           </form>
-          <div className="mt-8">
-            <ConnectWallet onClick={handleConnectWallet} />
-          </div>
         </div>
       </div>
     </section>

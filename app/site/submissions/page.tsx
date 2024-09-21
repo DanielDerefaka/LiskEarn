@@ -2,12 +2,13 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import contractInteractions from '@/lib/Contract';
-import { initializeEthers } from '@/lib/ethers';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarIcon, CheckCircleIcon, XCircleIcon } from 'lucide-react';
 import DOMPurify from 'dompurify';
+import { useConnectionContext } from '@/context/isConnected';
+import { useRouter } from 'next/navigation';
 
 type Submission = {
   id: string;
@@ -21,28 +22,11 @@ type Submission = {
 
 const Page = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [walletAddress, setWalletAddress] = useState<string>('');
-  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+  const router = useRouter();
 
-  useEffect(() => {
-    const checkWalletConnection = async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const { signer } = await initializeEthers();
-          const address = await signer.getAddress();
-          setWalletAddress(address);
-          setIsConnected(true);
-        } catch (error) {
-          console.error("Failed to check wallet connection:", error);
-          setError("Failed to connect to wallet. Please try again.");
-        }
-      }
-    };
-
-    checkWalletConnection();
-  }, []);
+  const {isConnected, walletAddress, profile} = useConnectionContext();
 
   const fetchSubmissions = async (): Promise<Submission[]> => {
     const sub = await contractInteractions.getUserSubmissions();
@@ -58,14 +42,17 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (isConnected && walletAddress) {
+    if (isConnected && profile && profile.category == "bounty_hunter") {
       setIsLoading(true);
       fetchSubmissions()
         .then(setSubmissions)
         .catch((err) => setError(err.message))
         .finally(() => setIsLoading(false));
+    }else {
+      alert("Page only accessible to bounty hunters");
+      router.push("/dashboard");
     }
-  }, [isConnected, walletAddress]);
+  }, [isConnected, walletAddress, profile]);
 
   const formatDate = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleDateString('en-US', {
@@ -81,7 +68,7 @@ const Page = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-[50px]">
-      {/* <h1 className="text-3xl font-bold mb-6">My Submissions</h1> */}
+      <h1 className="text-3xl font-bold mb-6">My Submissions</h1>
       
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -115,7 +102,7 @@ const Page = () => {
                     <CalendarIcon className="mr-1 h-4 w-4" />
                     {formatDate(s.timestamp)}
                   </div>
-                  <Badge variant={s.submissionState ? "success" : "destructive"}>
+                  <Badge variant={s.submissionState ? "default" : "destructive"}>
                     {s.submissionState ? (
                       <CheckCircleIcon className="mr-1 h-4 w-4" />
                     ) : (

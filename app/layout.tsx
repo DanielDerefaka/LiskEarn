@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"
 import Navbar from "@/components/Navbar";
+import { ConnectionContextProvider } from "@/context/isConnected"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,10 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-     
-        {children}
-        <Toaster />
-        </body>
+        <ConnectionContextProvider>
+          {children}
+          <Toaster />
+        </ConnectionContextProvider>
+      </body>
     </html>
   );
 }

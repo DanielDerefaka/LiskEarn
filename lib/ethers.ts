@@ -1,8 +1,12 @@
 import { ethers } from 'ethers';
 import EthereumProvider from '@walletconnect/ethereum-provider';
+import Provider from '@walletconnect/ethereum-provider';
 
 let provider: ethers.providers.Web3Provider;
 let signer: ethers.Signer;
+
+export const getProvider = () => provider;
+export const getSigner = () => signer;
 
 export const initializeEthers = async () => {
   if (typeof window !== 'undefined') {
@@ -29,5 +33,36 @@ export const initializeEthers = async () => {
   }
 };
 
-export const getProvider = () => provider;
-export const getSigner = () => signer;
+export async function setSigner(pSigner: ethers.providers.JsonRpcSigner) {
+  signer = pSigner;
+}
+
+export const checkWalletConnection = async () => {
+  if(getSigner()) {
+    return { signer: await getSigner().getAddress() }
+  }else {
+    console.log("Wallet Not Connected");
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        let pSigner = provider.getSigner();
+        if (await pSigner.getAddress()) {
+          setSigner(pSigner)
+          return {
+            isConnected: true,
+            signer,
+            provider
+          }
+        }
+      } catch (error) {
+        return {
+          isConnected: false,
+        }
+      }
+    } else {
+      return {
+        isConnected: false,
+      }    
+    }
+  }
+};

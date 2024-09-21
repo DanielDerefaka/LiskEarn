@@ -21,6 +21,7 @@ import { getEthEarnContract } from "@/lib/ContractInteraction";
 import MapBounties from "@/components/MapBounties";
 import { initializeEthers } from "@/lib/ethers";
 import { usePathname, useRouter } from "next/navigation";
+import { useConnectionContext } from "@/context/isConnected";
 
 type BountyProp = {
     name: string,
@@ -36,29 +37,10 @@ type BountyProp = {
 const BountySec = () => {
     const [Bounties, setBounties] = useState<any[]>([]);
     const [State, setState] = useState<string>("all");
-    const [walletAddress, setWalletAddress] = useState<string>();
-    const [isConnected, setIsConnected] = useState<boolean>(false);
     const [error, setError] = useState<string>();
     const pathname = usePathname();
     const router = useRouter();
-
-    useEffect(() => {
-        const checkWalletConnection = async () => {
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    const { signer } = await initializeEthers();
-                    const address = await signer.getAddress();
-                    setWalletAddress(address);
-                    setIsConnected(true);
-                } catch (error) {
-                    console.error("Failed to check wallet connection:", error);
-                    setError("Failed to connect to wallet. Please try again.");
-                }
-            }
-        };
-
-        checkWalletConnection();
-    }, []);
+    const {walletAddress, isConnected} = useConnectionContext();
 
   const fetchUserCategory = async () => {
     const contract = await getEthEarnContract();

@@ -6,41 +6,18 @@ import { UserData } from '@/types';
 import ConnectWallet from '@/components/shared/ConnectWallet';
 import Image from 'next/image';
 import { ethers } from 'ethers';
-import contractInteractions from '@/lib/Contract';
+import { useConnectionContext } from '@/context/isConnected';
 
 const Profile: NextPage = () => {
   const [profile, setProfile] = useState<UserData | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {walletAddress, isConnected, setWalletAddress, setIsConnected} = useConnectionContext();
   const [error, setError] = useState<string | null>(null);
-
-  // Check wallet connection and set wallet address
-  useEffect(() => {
-    const checkWalletConnection = async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const accounts = await provider.listAccounts();
-          if (accounts.length > 0) {
-            setWalletAddress(accounts[0]);
-            setIsConnected(true);
-          }
-        } catch (error) {
-          console.error("Failed to check wallet connection:", error);
-          setError("Failed to connect to wallet. Please try again.");
-        }
-      }
-    };
-
-    checkWalletConnection();
-  }, []);
 
   // Fetch profile once the wallet address is set
   useEffect(() => {
     const fetchProfile = async () => {
       if (!walletAddress) return;
-
       setIsLoading(true);
       setError(null);
 
@@ -100,7 +77,7 @@ const Profile: NextPage = () => {
           {!isConnected ? (
             <div className="text-center py-8">
               <p className="mb-4 text-lg">Connect your wallet to view your profile</p>
-              <ConnectWallet onClick={handleConnectWallet} />
+              <ConnectWallet />
             </div>
           ) : isLoading ? (
             <div className="text-center py-8">
