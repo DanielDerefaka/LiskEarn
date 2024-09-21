@@ -138,7 +138,9 @@ export default function Home() {
                     <CardContent className="p-6">
                       <div className="flex justify-between items-center mb-6">
                         <span className="text-3xl font-bold text-indigo-600">{activeBounty.pay} LISK</span>
-                        <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Active</span>
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${activeBounty.state ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-red-800'}`}>
+                          {activeBounty.state ? 'Active' : 'Ended'}
+                        </span>
                       </div>
                       <div className="space-y-3 text-sm">
                         <div className="flex items-center">
