@@ -12,6 +12,7 @@ import { useRouter} from "next/navigation";
 import ConnectWallet from "./ConnectWallet";
 import { ethers } from 'ethers';
 import ConnectWallett from "./ConnWallet";
+import { useConnectionContext } from "@/context/isConnected";
 
 // Define the form schema
 const formSchema = z.object({
@@ -26,35 +27,22 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function CreateUser() {
-    const [walletAddress, setWalletAddress] = useState<string | null>(null);
-const router = useRouter()
-    useEffect(() => {
-        const checkWalletConnection = async () => {
-          if ((window as any).ethereum) {
-            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-            const accounts = await provider.listAccounts();
-            if (accounts.length > 0) {
-              setWalletAddress(accounts[0]);
-            }
-          }
-        };
-    
-        checkWalletConnection();
-      }, []);
+    const {walletAddress, setWalletAddress, setProfile, setIsConnected} = useConnectionContext();
+    const router = useRouter()
     
       
     
-      const handleConnectWallet = async () => {
-        if ((window as any).ethereum) {
-          const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-          await provider.send("eth_requestAccounts", []);
-          const signer = provider.getSigner();
-          const address = await signer.getAddress();
-          setWalletAddress(address);
-        } else {
-          alert('Please install MetaMask!');
-        }
-      };
+    const handleConnectWallet = async () => {
+      if ((window as any).ethereum) {
+        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        setWalletAddress(address);
+      } else {
+        alert('Please install MetaMask!');
+      }
+    };
 
       
   const {
@@ -70,20 +58,31 @@ const router = useRouter()
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      await contractInteractions.createUser(
+      let tx = await contractInteractions.createUser(
         data.name,
         data.email,
         data.category,
         data.profileImg
       );
 
-      
-      toast({
-        title: "User Created",
-        description: "Your user profile has been successfully created.",
-      });
+      let ct: ("creator" | "bounty_hunter" | "Creator")[] = ["creator", "bounty_hunter", "Creator"]
 
-      router.push("/")
+      if(ct.includes(data.category as "creator" | "bounty_hunter" | "Creator")) {
+        setProfile({
+          name: data.name,
+          category: data.category as "creator" | "bounty_hunter" | "Creator",
+          profileImg: data.profileImg,
+        })
+
+        setIsConnected(true);
+      
+        toast({
+          title: "User Created",
+          description: "Your user profile has been successfully created.",
+        });
+
+        router.push("/")
+      }
    
     } catch (error) {
       console.error("Error creating user:", error);
