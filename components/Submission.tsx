@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Loading from "./Loading";
 
 type Props = {
   id: number,
@@ -18,9 +19,11 @@ const Submission = ({id, walletAddress}: Props) => {
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const router = useRouter();
 
   const handleSubmit = async (id: number) => {
+    setIsLoading(true)
     setError(null);
     setSuccess(null);
     try {
@@ -30,6 +33,8 @@ const Submission = ({id, walletAddress}: Props) => {
     } catch (error) {
       console.error("Failed to make submission:", error);
       setError("Failed to make submission. See console for details.");
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,7 +77,9 @@ const Submission = ({id, walletAddress}: Props) => {
                 <span>Wallet Address: </span><span>{walletAddress}</span>
               </div>
               <Button type="submit" className="w-full">
-                Submit
+                {
+                  !isLoading ? "Submit" : <Loading />
+                }
               </Button>
             </form>
           </CardContent>

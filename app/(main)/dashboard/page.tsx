@@ -37,6 +37,7 @@ const Page: React.FC = () => {
 
     const checkWalletConnection = async () => {
       if (typeof window.ethereum !== 'undefined') {
+        setIsLoading(true)
         try {
           const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
           const accounts = await provider.listAccounts();
@@ -47,6 +48,8 @@ const Page: React.FC = () => {
         } catch (error) {
           console.error("Failed to check wallet connection:", error);
           setError("Failed to connect to wallet. Please try again.");
+        }finally{
+          setIsLoading(false)
         }
       }
     };

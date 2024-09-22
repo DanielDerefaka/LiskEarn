@@ -20,6 +20,7 @@ import { ethers } from "ethers";
 import { stat } from "fs";
 import { getEthEarnContract } from "@/lib/ContractInteraction";
 import { useConnectionContext } from "@/context/isConnected";
+import Loading from "./Loading";
 
 type BountyProp ={
   name: string,
@@ -36,44 +37,51 @@ const BountySec = () => {
   const [Bounties, setBounties] = useState<any[]>([]);
   const [State, setState] = useState<string>("all");
   const {walletAddress, isConnected, profile} = useConnectionContext();
-  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fetchBounties = async () => {
     let bounties = [];
+    setIsLoading(true);
 
-    switch (State) {
-      case "all":
-        bounties = await contractInteractions.getAllBounties();
-        console.log(bounties);
-        break;
-
-      case "open":
-        bounties =await contractInteractions.getAllActiveBounties()
-        break;
-
-      case "ended": 
-        bounties =await contractInteractions.getAllCompletedBounties()
-        break;
-    
-      default:
-        bounties =await contractInteractions.getAllBounties()
-        break;
+    try {
+      switch (State) {
+        case "all":
+          bounties = await contractInteractions.getAllBounties();
+          console.log(bounties);
+          break;
+  
+        case "open":
+          bounties =await contractInteractions.getAllActiveBounties()
+          break;
+  
+        case "ended": 
+          bounties =await contractInteractions.getAllCompletedBounties()
+          break;
+      
+        default:
+          bounties =await contractInteractions.getAllBounties()
+          break;
+      }
+  
+      const processedBounties = bounties.map((bounty: any) => {
+        return {
+          id: bounty.id.toString(),
+          name: bounty[1], // or bounty.name
+          description: bounty[2], // or bounty.description
+          owner: bounty[3], // or bounty.owner, 
+          pay: ethers.utils.formatEther(bounty[5]),
+          state: bounty[6],
+          timestamp: new Date(bounty[7].toNumber() * 1000).toLocaleString(),
+          endDate: new Date(bounty[8].toNumber() * 1000).toLocaleString(),
+        };
+      });
+  
+      setBounties(processedBounties);
+    } catch (error: any) {
+      console.log(error.message ?? error); 
+    }finally {
+      setIsLoading(false);
     }
-
-    const processedBounties = bounties.map((bounty: any) => {
-      return {
-        id: bounty.id.toString(),
-        name: bounty[1], // or bounty.name
-        description: bounty[2], // or bounty.description
-        owner: bounty[3], // or bounty.owner, 
-        pay: ethers.utils.formatEther(bounty[5]),
-        state: bounty[6],
-        timestamp: new Date(bounty[7].toNumber() * 1000).toLocaleString(),
-        endDate: new Date(bounty[8].toNumber() * 1000).toLocaleString(),
-      };
-    });
-
-    setBounties(processedBounties);
   }
 
   useEffect(() => {
@@ -96,7 +104,9 @@ const BountySec = () => {
           }}>Ended</TabsTrigger>
         </TabsList>
         <div className="border-b-[1px] border-gray-500 rounded"></div>
-        <TabsContent value="all">
+        {!isLoading ? (
+          <>
+          <TabsContent value="all">
           {
             Bounties.map((b: BountyProp, i) => {
               return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id}  />
@@ -126,6 +136,8 @@ const BountySec = () => {
         
         <TabsContent value="review"></TabsContent>
         <TabsContent value="completed"></TabsContent>
+        </>
+        ): <div className="pt-8"><Loading /></div>}
       </Tabs>
     </div>
   );

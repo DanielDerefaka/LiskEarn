@@ -29,16 +29,23 @@ const Page = () => {
   const {isConnected, walletAddress, profile, isLoading} = useConnectionContext();
 
   const fetchSubmissions = async (): Promise<Submission[]> => {
-    const sub = await contractInteractions.getUserSubmissions();
-    return sub.map((subb: any) => ({
-      id: subb.id.toString(),
-      bountyId: subb.bountyId.toString(),
-      content: subb.content,
-      bountyState: subb.bountyState,
-      submissionState: subb.submissionState,
-      submissionOwner: subb.submissionOwner,
-      timestamp: subb.timestamp.toNumber(),
-    }));
+    setIsLoading2(true);
+    try {
+      const sub = await contractInteractions.getUserSubmissions();
+      setIsLoading2(true);
+      return sub.map((subb: any) => ({
+        id: subb.id.toString(),
+        bountyId: subb.bountyId.toString(),
+        content: subb.content,
+        bountyState: subb.bountyState,
+        submissionState: subb.submissionState,
+        submissionOwner: subb.submissionOwner,
+        timestamp: subb.timestamp.toNumber(),
+      }));
+    } catch (error) {
+      setIsLoading2(false);
+      return []
+    }
   };
 
   useEffect(() => {

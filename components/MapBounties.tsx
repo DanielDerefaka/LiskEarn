@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Image from 'next/image';
 import { activeBountyContext } from '@/app/site/page';
 import contractInteractions from '@/lib/Contract';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import SubmissionSheet from './submission-sheet';
+import Loading from './Loading';
 
 type BountyProp = {
   name: string;
@@ -43,6 +44,7 @@ const MapBounties = ({
   endBounty
 }: BountyProp) => {
   const { setter } = useContext(activeBountyContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   return (
     <div 
@@ -99,10 +101,17 @@ const MapBounties = ({
       <div className='flex items-start gap-3'>
       {(endBounty && state) && <>
         <Button className={'mt-5 bg-red-600 hover:bg-red-400'} onClick={async () => {
-          await contractInteractions.endBounty(parseInt(id));
-          alert("Bounty ended successfully, Refresh to view changes");
+          setIsLoading(true)
+          try {
+            await contractInteractions.endBounty(parseInt(id));
+            alert("Bounty ended successfully, Refresh to view changes");
+          } catch (error: any) {
+            alert(error.message);
+          }finally {
+            setIsLoading(false)
+          }
         }
-        }>Cancel Bounty</Button>
+        }>{isLoading ? <Loading /> : "Cancel Bounty"}</Button>
         <Sheet>
   <SheetTrigger>
     <Button variant={"outline"} className={'mt-5 border-blue-600 hover:bg-blue-600 hover:text-white'}>View Submissions</Button>

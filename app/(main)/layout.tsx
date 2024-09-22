@@ -23,7 +23,7 @@ export  default async function RootLayout ({
 
   return (
     <html lang="en">
-      <main className={`${poppins.className} flex h-screen w-full font-inter `}>
+      <section className={`${poppins.className} flex h-screen w-full font-inter `}>
         
         <Sidebar  />
         <div className="flex size-full flex-col ">
@@ -37,7 +37,7 @@ export  default async function RootLayout ({
         </div>
 
         
-      </main>
+      </section>
     </html>
   );
 }

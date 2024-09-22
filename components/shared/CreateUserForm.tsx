@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,9 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import contractInteractions from "@/lib/Contract";
 import { useRouter} from "next/navigation";
-import ConnectWallet from "./ConnectWallet";
 import { ethers } from 'ethers';
-import ConnectWallett from "./ConnWallet";
 import { useConnectionContext } from "@/context/isConnected";
 
 // Define the form schema

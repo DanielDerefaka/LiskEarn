@@ -115,7 +115,7 @@ export default function Home() {
       val: activeBounty,
       setter: setActiveBounty
     }}>
-      <main className="">
+      <section className="">
         <section className="h-full w-full pt-25 mt-25 md:mt-1 relative flex  md:p-20 p-5  md:pt-20 md:flex-row flex-col">
           <div className="w-full">
             <Bounties />
@@ -189,7 +189,7 @@ export default function Home() {
           </div>
 
         </section>
-      </main>
+      </section>
     </activeBountyContext.Provider>
   );
 }

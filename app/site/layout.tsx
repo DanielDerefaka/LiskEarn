@@ -10,10 +10,10 @@ import { useConnectionContext } from "@/context/isConnected"
 
 const layout = ({children}: {children: React.ReactNode}) => {
   return (
-   <main className='h-full'>
+   <section className='h-full'>
       <Navbar/> 
       {children}
-   </main>
+   </section>
   )
 }
 

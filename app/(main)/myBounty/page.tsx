@@ -22,6 +22,7 @@ import MapBounties from "@/components/MapBounties";
 import { initializeEthers } from "@/lib/ethers";
 import { usePathname, useRouter } from "next/navigation";
 import { useConnectionContext } from "@/context/isConnected";
+import Loading from "@/components/Loading";
 
 type BountyProp = {
     name: string,
@@ -37,10 +38,9 @@ type BountyProp = {
 const BountySec = () => {
     const [Bounties, setBounties] = useState<any[]>([]);
     const [State, setState] = useState<string>("all");
-    const [error, setError] = useState<string>();
-    const pathname = usePathname();
     const router = useRouter();
     const {walletAddress, isConnected} = useConnectionContext();
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fetchUserCategory = async () => {
     const contract = await getEthEarnContract();
@@ -67,22 +67,29 @@ const BountySec = () => {
   }, [walletAddress, isConnected]);
 
     const fetchBounties = async () => {
-        let bounties = await contractInteractions.getUserBounties();
+        setIsLoading(true)
+        try {
+          let bounties = await contractInteractions.getUserBounties();
 
-        const processedBounties = bounties.map((bounty: any) => {
-            return {
-                id: bounty.id.toString(),
-                name: bounty[1], // or bounty.name
-                description: bounty[2], // or bounty.description
-                owner: bounty[3], // or bounty.owner, 
-                pay: ethers.utils.formatEther(bounty[5]),
-                state: bounty[6],
-                timestamp: new Date(bounty[7].toNumber() * 1000).toLocaleString(),
-                endDate: new Date(bounty[8].toNumber() * 1000).toLocaleString(),
-            };
-        });
+          const processedBounties = bounties.map((bounty: any) => {
+              return {
+                  id: bounty.id.toString(),
+                  name: bounty[1], // or bounty.name
+                  description: bounty[2], // or bounty.description
+                  owner: bounty[3], // or bounty.owner, 
+                  pay: ethers.utils.formatEther(bounty[5]),
+                  state: bounty[6],
+                  timestamp: new Date(bounty[7].toNumber() * 1000).toLocaleString(),
+                  endDate: new Date(bounty[8].toNumber() * 1000).toLocaleString(),
+              };
+          });
 
-        setBounties(processedBounties);
+          setBounties(processedBounties);
+        } catch (error: any) {
+          alert(error.message)
+        }finally {
+          setIsLoading(false);
+        };
     }
 
     useEffect(() => {
@@ -95,9 +102,11 @@ const BountySec = () => {
     return (
         <div className="mt-5 flex flex-col gap-3 px-12">
             {
+              !isLoading ? 
                 Bounties.length > 0 ? Bounties.map((b: BountyProp, i) => {
                     return <MapBounties state={b.state} name={b.name} owner={b.owner} pay={b.pay} endDate={b.endDate} entryDate={b.timestamp} description={b.description} key={i} id={b.id} endBounty />
                 }) : <h3 className="text-2xl">No Bounty found in this category</h3>
+              : <Loading />
             }
         </div>
     );
