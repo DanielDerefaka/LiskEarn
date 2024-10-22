@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { getSigner } from './ethers';
 import EthEarnABI from './contractAbi.json';
 
-const CONTRACT_ADDRESS = "0x34c93240C1584D7C9b9592c5246F9F1EE5D65ed5";
+const CONTRACT_ADDRESS = "0x776730646d40248a2579E5C567032D3162E4E392";
 
 export  const getEthEarnContract = () => {
   const contract = new ethers.Contract(CONTRACT_ADDRESS, EthEarnABI, getSigner());
