@@ -1,13 +1,19 @@
+//Note: contract address = 0x776730646d40248a2579E5C567032D3162E4E392;
+
+
+
+
+
 //SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.26;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+// import { IERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract EthEarn {
     address private owner;
-    address private LiskTokenContractAddress = 0x8a21CF9Ba08Ae709D64Cb25AfAA951183EC9FF6D;
-    IERC20 public LiskToken;
+    // address private LiskTokenContractAddress = 0x8a21CF9Ba08Ae709D64Cb25AfAA951183EC9FF6D;
+    // IERC20 public LiskToken;
     uint256 AmtToMakeBounty;
 
     struct UserData {
@@ -68,8 +74,8 @@ contract EthEarn {
     event SubmissionApproved(uint256 indexed submissionId, string submissionOwnerName);
 
     constructor () {
-        LiskToken = IERC20(LiskTokenContractAddress);
-        AmtToMakeBounty = 10*(10**18);
+        // LiskToken = IERC20(LiskTokenContractAddress);
+        // AmtToMakeBounty = 10*(10**18);
     }
 
     modifier userExist() {    
